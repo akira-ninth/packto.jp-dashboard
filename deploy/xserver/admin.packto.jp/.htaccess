@@ -1,3 +1,6 @@
+# Apache の DirectoryIndex を強制 (Xserver デフォルトの index.html を無視)
+DirectoryIndex index.php
+
 <IfModule mod_rewrite.c>
     <IfModule mod_negotiation.c>
         Options -MultiViews -Indexes

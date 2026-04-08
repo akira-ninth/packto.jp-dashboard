@@ -1,0 +1,24 @@
+# Xserver の制約で /packto-console/ がたまたま apex packto.jp の doc root 配下に
+# 置かれているため、ここから下の Laravel 内部ファイル (.env, vendor, config 等) が
+# Web からアクセスされないように Apache レベルで遮断する。
+#
+# 重要: ファイルシステム経由 (PHP の require / file_get_contents) からは引き続き
+# 読めるので、/admin.packto.jp/index.php と /app.packto.jp/index.php からの
+# Laravel ブートストラップは通常通り動く。
+#
+# ローカル開発では `php artisan serve` を使うので Apache を経由せず影響なし。
+
+<IfModule mod_authz_core.c>
+    Require all denied
+</IfModule>
+<IfModule !mod_authz_core.c>
+    Order Deny,Allow
+    Deny from all
+</IfModule>
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteRule ^ - [F,L]
+</IfModule>
+
+Options -Indexes
