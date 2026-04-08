@@ -42,6 +42,7 @@
         <div class="spacer"></div>
         @auth
             <div class="user">{{ auth()->user()->email }} ({{ auth()->user()->role }})</div>
+            <a href="{{ route('account.edit') }}" style="color: #cbd5e1; text-decoration: none; font-size: 12px; padding: 4px 12px; border: 1px solid #4b5563; border-radius: 4px;">アカウント</a>
             <form method="POST" action="{{ url('/logout') }}" style="margin: 0;">
                 @csrf
                 <button type="submit" style="background: transparent; border: 1px solid #4b5563; color: #cbd5e1; padding: 4px 12px; border-radius: 4px; cursor: pointer; font-size: 12px;">ログアウト</button>

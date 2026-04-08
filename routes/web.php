@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AccountController;
 use App\Http\Controllers\Admin\CustomerController as AdminCustomerController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Auth\LoginController;
@@ -20,6 +21,16 @@ Route::middleware('web')->group(function () {
     Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
     Route::post('/login', [LoginController::class, 'login']);
     Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
+});
+
+/*
+|--------------------------------------------------------------------------
+| アカウント設定 (両ロール共通)
+|--------------------------------------------------------------------------
+*/
+Route::middleware(['web', 'auth'])->group(function () {
+    Route::get('/account', [AccountController::class, 'edit'])->name('account.edit');
+    Route::patch('/account/password', [AccountController::class, 'updatePassword'])->name('account.password.update');
 });
 
 /*

@@ -167,4 +167,69 @@ class DomainRoutingTest extends TestCase
         $response->assertRedirect(route('login'));
         $this->assertGuest();
     }
+
+    public function test_account_edit_renders_for_master(): void
+    {
+        [$master] = $this->seedPlansAndUsers();
+
+        $response = $this->actingAs($master)->get('/account');
+
+        $response->assertOk();
+        $response->assertSee('アカウント設定');
+        $response->assertSee('master@packto.jp');
+    }
+
+    public function test_account_edit_renders_for_customer(): void
+    {
+        [, $tenant, $customer] = $this->seedPlansAndUsers();
+
+        $response = $this->actingAs($tenant)->get('/account');
+
+        $response->assertOk();
+        $response->assertSee($customer->display_name);
+    }
+
+    public function test_account_password_can_be_changed(): void
+    {
+        [$master] = $this->seedPlansAndUsers();
+
+        $response = $this->actingAs($master)->patch('/account/password', [
+            'current_password' => 'test-pass',
+            'password' => 'new-secure-pass-456',
+            'password_confirmation' => 'new-secure-pass-456',
+        ]);
+
+        $response->assertRedirect(route('account.edit'));
+
+        $master->refresh();
+        $this->assertTrue(\Illuminate\Support\Facades\Hash::check('new-secure-pass-456', $master->password));
+    }
+
+    public function test_account_password_requires_current_password(): void
+    {
+        [$master] = $this->seedPlansAndUsers();
+
+        $response = $this->actingAs($master)->from('/account')->patch('/account/password', [
+            'current_password' => 'wrong-current',
+            'password' => 'new-secure-pass-456',
+            'password_confirmation' => 'new-secure-pass-456',
+        ]);
+
+        $response->assertRedirect('/account');
+        $response->assertSessionHasErrors('current_password');
+    }
+
+    public function test_account_password_must_be_confirmed(): void
+    {
+        [$master] = $this->seedPlansAndUsers();
+
+        $response = $this->actingAs($master)->from('/account')->patch('/account/password', [
+            'current_password' => 'test-pass',
+            'password' => 'new-secure-pass-456',
+            'password_confirmation' => 'mismatch',
+        ]);
+
+        $response->assertRedirect('/account');
+        $response->assertSessionHasErrors('password');
+    }
 }
