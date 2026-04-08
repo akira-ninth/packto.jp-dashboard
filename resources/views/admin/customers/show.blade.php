@@ -12,6 +12,21 @@
 @section('content')
     <h1>{{ $customer->display_name }}</h1>
 
+    @if (session('temp_credentials'))
+        <div class="card" style="background: #fef3c7; border: 1px solid #f59e0b;">
+            <h2 style="margin-top: 0;">⚠️ 初期ログイン情報 (この画面でのみ表示されます)</h2>
+            <p style="font-size: 13px; color: #78350f;">
+                顧客に渡したら必ず控えてください。次にこの画面をリロードすると消えます。
+                顧客は初回ログイン後に <code>/account</code> でパスワードを変更してください。
+            </p>
+            <table>
+                <tr><th style="width: 140px;">ログイン URL</th><td><code>https://app.packto.jp/login</code></td></tr>
+                <tr><th>メール</th><td><code>{{ session('temp_credentials.email') }}</code></td></tr>
+                <tr><th>パスワード</th><td><code style="background: #fff; padding: 4px 8px; border-radius: 4px; font-size: 14px;">{{ session('temp_credentials.password') }}</code></td></tr>
+            </table>
+        </div>
+    @endif
+
     <div class="card">
         <table>
             <tr><th style="width: 180px;">サブドメイン</th><td><code>{{ $customer->subdomain }}.packto.jp</code></td></tr>

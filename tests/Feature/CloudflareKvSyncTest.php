@@ -198,4 +198,84 @@ class CloudflareKvSyncTest extends TestCase
 
         Http::assertNothingSent();
     }
+
+    public function test_store_creates_customer_user_when_create_user_is_set(): void
+    {
+        Http::fake([
+            $this->endpointFor('newco') => Http::response(['success' => true], 200),
+        ]);
+
+        $pro = $this->makePlan('pro', true);
+        $master = $this->actingAsMaster();
+
+        $response = $this->actingAs($master)
+            ->post('http://'.config('app.admin_domain').'/customers', [
+                'subdomain' => 'newco',
+                'display_name' => 'New Co',
+                'origin_url' => 'https://newco.example.com',
+                'plan_id' => $pro->id,
+                'create_user' => '1',
+                'user_name' => 'NewCo Admin',
+                'user_email' => 'admin@newco.example.com',
+            ]);
+
+        $customer = \App\Models\Customer::where('subdomain', 'newco')->firstOrFail();
+        $response->assertRedirect(route('admin.customers.show', $customer));
+
+        // 一回限り表示用に flash session に乗っているか
+        $response->assertSessionHas('temp_credentials.email', 'admin@newco.example.com');
+        $tempPassword = session('temp_credentials.password');
+        $this->assertNotNull($tempPassword);
+        $this->assertGreaterThanOrEqual(16, strlen($tempPassword));
+
+        // ユーザが作成され customer に紐付いているか
+        $user = \App\Models\User::where('email', 'admin@newco.example.com')->firstOrFail();
+        $this->assertEquals(\App\Models\User::ROLE_CUSTOMER, $user->role);
+        $this->assertEquals($customer->id, $user->customer_id);
+        $this->assertTrue(\Illuminate\Support\Facades\Hash::check($tempPassword, $user->password));
+    }
+
+    public function test_store_without_create_user_does_not_create_user(): void
+    {
+        Http::fake([
+            $this->endpointFor('newco') => Http::response(['success' => true], 200),
+        ]);
+
+        $pro = $this->makePlan('pro', true);
+        $master = $this->actingAsMaster();
+
+        $beforeCount = \App\Models\User::count();
+
+        $this->actingAs($master)
+            ->post('http://'.config('app.admin_domain').'/customers', [
+                'subdomain' => 'newco',
+                'display_name' => 'New Co',
+                'origin_url' => 'https://newco.example.com',
+                'plan_id' => $pro->id,
+            ]);
+
+        $this->assertEquals($beforeCount, \App\Models\User::count());
+    }
+
+    public function test_store_user_email_required_when_create_user_set(): void
+    {
+        Http::fake();
+
+        $pro = $this->makePlan('pro', true);
+        $master = $this->actingAsMaster();
+
+        $response = $this->actingAs($master)
+            ->from('http://'.config('app.admin_domain').'/customers/create')
+            ->post('http://'.config('app.admin_domain').'/customers', [
+                'subdomain' => 'newco',
+                'display_name' => 'New Co',
+                'origin_url' => 'https://newco.example.com',
+                'plan_id' => $pro->id,
+                'create_user' => '1',
+                // user_name と user_email を意図的に省略
+            ]);
+
+        $response->assertSessionHasErrors(['user_email', 'user_name']);
+        $this->assertDatabaseMissing('customers', ['subdomain' => 'newco']);
+    }
 }

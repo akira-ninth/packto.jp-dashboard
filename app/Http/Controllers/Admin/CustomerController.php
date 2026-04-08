@@ -5,9 +5,12 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Customer;
 use App\Models\Plan;
+use App\Models\User;
 use App\Services\CloudflareKvService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 use Illuminate\View\View;
 
 class CustomerController extends Controller
@@ -38,13 +41,43 @@ class CustomerController extends Controller
             'origin_url' => ['required', 'url'],
             'plan_id' => ['required', 'exists:plans,id'],
             'active' => ['nullable', 'boolean'],
+            'create_user' => ['nullable', 'boolean'],
+            'user_email' => ['nullable', 'required_if:create_user,1', 'email', 'unique:users,email'],
+            'user_name' => ['nullable', 'required_if:create_user,1', 'string', 'max:255'],
         ]);
 
         $data['active'] = (bool) ($data['active'] ?? true);
 
-        $customer = Customer::create($data);
+        $customer = Customer::create([
+            'subdomain' => $data['subdomain'],
+            'display_name' => $data['display_name'],
+            'origin_url' => $data['origin_url'],
+            'plan_id' => $data['plan_id'],
+            'active' => $data['active'],
+        ]);
         $customer->load('plan');
         $this->kv->putCustomer($customer);
+
+        // 初期ユーザを作成 (オプション)
+        $tempPassword = null;
+        if (! empty($data['create_user'])) {
+            $tempPassword = Str::password(16, true, true, false);
+            User::create([
+                'name' => $data['user_name'],
+                'email' => $data['user_email'],
+                'password' => Hash::make($tempPassword),
+                'role' => User::ROLE_CUSTOMER,
+                'customer_id' => $customer->id,
+            ]);
+
+            // ワンタイム表示のため flash session に乗せる
+            return redirect()
+                ->route('admin.customers.show', $customer)
+                ->with('temp_credentials', [
+                    'email' => $data['user_email'],
+                    'password' => $tempPassword,
+                ]);
+        }
 
         return redirect()->route('admin.customers.index')->with('status', 'created');
     }
