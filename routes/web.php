@@ -4,6 +4,7 @@ use App\Http\Controllers\AccountController;
 use App\Http\Controllers\Admin\CustomerController as AdminCustomerController;
 use App\Http\Controllers\Admin\CustomerUserController as AdminCustomerUserController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
+use App\Http\Controllers\Admin\MasterController as AdminMasterController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Tenant\DashboardController as TenantDashboardController;
 use Illuminate\Support\Facades\Route;
@@ -51,6 +52,11 @@ Route::domain($adminDomain)
             ->name('customers.users.store');
         Route::delete('customers/{customer}/users/{user}', [AdminCustomerUserController::class, 'destroy'])
             ->name('customers.users.destroy');
+
+        // Phase 13h: master アカウント管理
+        Route::get('masters', [AdminMasterController::class, 'index'])->name('masters.index');
+        Route::post('masters', [AdminMasterController::class, 'store'])->name('masters.store');
+        Route::delete('masters/{master}', [AdminMasterController::class, 'destroy'])->name('masters.destroy');
     });
 
 /*
