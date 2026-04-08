@@ -54,17 +54,40 @@
             <p style="color: #6b7280;">ユーザが登録されていません</p>
         @else
             <table>
-                <thead><tr><th>名前</th><th>メール</th><th>ロール</th></tr></thead>
+                <thead><tr><th>名前</th><th>メール</th><th></th></tr></thead>
                 <tbody>
                     @foreach ($customer->users as $user)
                         <tr>
                             <td>{{ $user->name }}</td>
                             <td>{{ $user->email }}</td>
-                            <td>{{ $user->role }}</td>
+                            <td style="text-align: right;">
+                                <form method="POST" action="{{ route('admin.customers.users.destroy', [$customer, $user]) }}" style="display: inline; margin: 0;" onsubmit="return confirm('本当に {{ $user->email }} を削除しますか?');">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn danger" style="border: none; cursor: pointer; font-size: 12px; padding: 4px 10px;">削除</button>
+                                </form>
+                            </td>
                         </tr>
                     @endforeach
                 </tbody>
             </table>
         @endif
+
+        <h2 style="margin-top: 24px; font-size: 16px;">ユーザを追加</h2>
+        <form method="POST" action="{{ route('admin.customers.users.store', $customer) }}">
+            @csrf
+            <label>名前</label>
+            <input type="text" name="name" value="{{ old('name') }}" required>
+            @error('name')<div class="errors">{{ $message }}</div>@enderror
+
+            <label>メールアドレス</label>
+            <input type="email" name="email" value="{{ old('email') }}" required>
+            @error('email')<div class="errors">{{ $message }}</div>@enderror
+
+            <p style="margin-top: 16px;">
+                <button type="submit" class="btn" style="border: none; cursor: pointer;">追加</button>
+            </p>
+            <p style="font-size: 12px; color: #6b7280;">パスワードは自動生成され、追加完了画面で 1 度だけ表示されます。</p>
+        </form>
     </div>
 @endsection

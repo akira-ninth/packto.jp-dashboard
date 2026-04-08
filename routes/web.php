@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\Admin\CustomerController as AdminCustomerController;
+use App\Http\Controllers\Admin\CustomerUserController as AdminCustomerUserController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Tenant\DashboardController as TenantDashboardController;
@@ -44,6 +45,12 @@ Route::domain($adminDomain)
     ->group(function (): void {
         Route::get('/', [AdminDashboardController::class, 'index'])->name('dashboard');
         Route::resource('customers', AdminCustomerController::class);
+
+        // Phase 13i: 顧客に紐付いた customer ロールユーザの追加 / 削除
+        Route::post('customers/{customer}/users', [AdminCustomerUserController::class, 'store'])
+            ->name('customers.users.store');
+        Route::delete('customers/{customer}/users/{user}', [AdminCustomerUserController::class, 'destroy'])
+            ->name('customers.users.destroy');
     });
 
 /*
