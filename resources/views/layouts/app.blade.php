@@ -26,7 +26,7 @@
         a.btn.danger { background: #dc2626; }
         .status { padding: 12px; background: #d1fae5; color: #065f46; border-radius: 6px; margin-bottom: 16px; }
         form label { display: block; margin: 12px 0 4px; font-size: 14px; font-weight: 600; }
-        form input[type=text], form input[type=url], form select { width: 100%; padding: 8px 12px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px; }
+        form input[type=text], form input[type=email], form input[type=password], form input[type=url], form select { width: 100%; padding: 8px 12px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px; }
         form .errors { color: #dc2626; font-size: 13px; margin-top: 4px; }
         .badge { display: inline-block; padding: 2px 8px; border-radius: 12px; font-size: 12px; font-weight: 600; }
         .badge.basic { background: #e5e7eb; color: #374151; }
@@ -42,6 +42,10 @@
         <div class="spacer"></div>
         @auth
             <div class="user">{{ auth()->user()->email }} ({{ auth()->user()->role }})</div>
+            <form method="POST" action="{{ url('/logout') }}" style="margin: 0;">
+                @csrf
+                <button type="submit" style="background: transparent; border: 1px solid #4b5563; color: #cbd5e1; padding: 4px 12px; border-radius: 4px; cursor: pointer; font-size: 12px;">ログアウト</button>
+            </form>
         @endauth
     </header>
     <main>

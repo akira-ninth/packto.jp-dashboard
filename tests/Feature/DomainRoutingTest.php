@@ -108,4 +108,63 @@ class DomainRoutingTest extends TestCase
         $response->assertSee($customer->subdomain);
         $response->assertSee($customer->origin_url);
     }
+
+    public function test_login_form_renders(): void
+    {
+        $response = $this->get('/login');
+
+        $response->assertOk();
+        $response->assertSee('Packto Console ログイン');
+        $response->assertSee('メールアドレス');
+    }
+
+    public function test_master_login_redirects_to_admin_dashboard(): void
+    {
+        $this->seedPlansAndUsers();
+
+        $response = $this->post('/login', [
+            'email' => 'master@packto.jp',
+            'password' => 'test-pass',
+        ]);
+
+        $response->assertRedirect(route('admin.dashboard'));
+        $this->assertAuthenticatedAs(User::where('email', 'master@packto.jp')->first());
+    }
+
+    public function test_customer_login_redirects_to_tenant_dashboard(): void
+    {
+        $this->seedPlansAndUsers();
+
+        $response = $this->post('/login', [
+            'email' => 'rays-hd@packto.jp',
+            'password' => 'test-pass',
+        ]);
+
+        $response->assertRedirect(route('tenant.dashboard'));
+        $this->assertAuthenticatedAs(User::where('email', 'rays-hd@packto.jp')->first());
+    }
+
+    public function test_login_with_wrong_password_fails(): void
+    {
+        $this->seedPlansAndUsers();
+
+        $response = $this->from('/login')->post('/login', [
+            'email' => 'master@packto.jp',
+            'password' => 'wrong-pass',
+        ]);
+
+        $response->assertRedirect('/login');
+        $response->assertSessionHasErrors('email');
+        $this->assertGuest();
+    }
+
+    public function test_logout_clears_session(): void
+    {
+        [$master] = $this->seedPlansAndUsers();
+
+        $response = $this->actingAs($master)->post('/logout');
+
+        $response->assertRedirect(route('login'));
+        $this->assertGuest();
+    }
 }
