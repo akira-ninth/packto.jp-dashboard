@@ -5,12 +5,17 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Customer;
 use App\Models\Plan;
+use App\Services\CloudflareKvService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
 class CustomerController extends Controller
 {
+    public function __construct(
+        private readonly CloudflareKvService $kv,
+    ) {}
+
     public function index(): View
     {
         return view('admin.customers.index', [
@@ -37,7 +42,9 @@ class CustomerController extends Controller
 
         $data['active'] = (bool) ($data['active'] ?? true);
 
-        Customer::create($data);
+        $customer = Customer::create($data);
+        $customer->load('plan');
+        $this->kv->putCustomer($customer);
 
         return redirect()->route('admin.customers.index')->with('status', 'created');
     }
@@ -69,13 +76,17 @@ class CustomerController extends Controller
         $data['active'] = (bool) ($data['active'] ?? false);
 
         $customer->update($data);
+        $customer->load('plan');
+        $this->kv->putCustomer($customer);
 
         return redirect()->route('admin.customers.show', $customer)->with('status', 'updated');
     }
 
     public function destroy(Customer $customer): RedirectResponse
     {
+        $subdomain = $customer->subdomain;
         $customer->delete();
+        $this->kv->deleteCustomer($subdomain);
 
         return redirect()->route('admin.customers.index')->with('status', 'deleted');
     }

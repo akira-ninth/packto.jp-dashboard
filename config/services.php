@@ -35,4 +35,15 @@ return [
         ],
     ],
 
+    /*
+     * Phase 11: Cloudflare KV (CUSTOMERS namespace) への書き込み用クレデンシャル。
+     * api_token は KV Edit 権限のスコープ済みトークンを使う。
+     * 値が未設定なら CloudflareKvService は no-op で動く (ログに warn を残す)。
+     */
+    'cloudflare' => [
+        'api_token' => env('CLOUDFLARE_API_TOKEN'),
+        'account_id' => env('CLOUDFLARE_ACCOUNT_ID'),
+        'kv_customers_namespace_id' => env('CLOUDFLARE_KV_CUSTOMERS_NAMESPACE_ID'),
+    ],
+
 ];
