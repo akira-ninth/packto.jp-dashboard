@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Customer;
 use App\Models\Plan;
 use App\Models\User;
+use App\Services\CloudflareAnalyticsService;
 use App\Services\CloudflareKvService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -17,6 +18,7 @@ class CustomerController extends Controller
 {
     public function __construct(
         private readonly CloudflareKvService $kv,
+        private readonly CloudflareAnalyticsService $analytics,
     ) {}
 
     public function index(): View
@@ -86,7 +88,11 @@ class CustomerController extends Controller
     {
         $customer->load('plan', 'users');
 
-        return view('admin.customers.show', ['customer' => $customer]);
+        return view('admin.customers.show', [
+            'customer' => $customer,
+            'usageSummary' => $this->analytics->getCustomerSummary($customer->subdomain, 7),
+            'usageByFormat' => $this->analytics->getCustomerByFormat($customer->subdomain, 7),
+        ]);
     }
 
     public function edit(Customer $customer): View

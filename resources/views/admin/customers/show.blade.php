@@ -50,6 +50,38 @@
     </div>
 
     <div class="card">
+        <h2>使用量サマリ (直近 7 日)</h2>
+        @if (! empty($usageSummary) && (int) ($usageSummary['reqs'] ?? 0) > 0)
+            <div style="display: flex; gap: 32px; margin-bottom: 16px;">
+                <div>
+                    <div style="font-size: 12px; color: #6b7280;">リクエスト数</div>
+                    <div style="font-size: 28px; font-weight: 700;">{{ number_format((int) $usageSummary['reqs']) }}</div>
+                </div>
+                <div>
+                    <div style="font-size: 12px; color: #6b7280;">配信 MB</div>
+                    <div style="font-size: 28px; font-weight: 700;">{{ number_format((float) ($usageSummary['total_bytes'] ?? 0) / 1024 / 1024, 2) }}</div>
+                </div>
+            </div>
+            @if (! empty($usageByFormat))
+                <table>
+                    <thead><tr><th>format</th><th style="text-align: right;">reqs</th><th style="text-align: right;">MB</th></tr></thead>
+                    <tbody>
+                        @foreach ($usageByFormat as $row)
+                            <tr>
+                                <td><code>{{ $row['format'] ?: '(none)' }}</code></td>
+                                <td style="text-align: right;">{{ number_format((int) $row['reqs']) }}</td>
+                                <td style="text-align: right;">{{ number_format((float) $row['total_bytes'] / 1024 / 1024, 2) }}</td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            @endif
+        @else
+            <p style="color: #6b7280;">直近 7 日のリクエストがありません</p>
+        @endif
+    </div>
+
+    <div class="card">
         <h2>所属ユーザ ({{ $customer->users->count() }})</h2>
         @if ($customer->users->isEmpty())
             <p style="color: #6b7280;">ユーザが登録されていません</p>
