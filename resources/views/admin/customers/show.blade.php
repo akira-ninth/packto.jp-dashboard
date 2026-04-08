@@ -51,26 +51,51 @@
 
     <div class="card">
         <h2>使用量サマリ (直近 7 日)</h2>
-        @if (! empty($usageSummary) && (int) ($usageSummary['reqs'] ?? 0) > 0)
-            <div style="display: flex; gap: 32px; margin-bottom: 16px;">
+        @php
+            $sReqs = (int) ($usageSummary['reqs'] ?? 0);
+            $sOut = (float) ($usageSummary['output_bytes'] ?? 0);
+            $sIn = (float) ($usageSummary['input_bytes'] ?? 0);
+            $sRatio = $sIn > 0 ? ($sOut / $sIn) * 100 : null;
+        @endphp
+        @if ($sReqs > 0)
+            <div style="display: flex; gap: 32px; flex-wrap: wrap; margin-bottom: 16px;">
                 <div>
-                    <div style="font-size: 12px; color: #6b7280;">リクエスト数</div>
-                    <div style="font-size: 28px; font-weight: 700;">{{ number_format((int) $usageSummary['reqs']) }}</div>
+                    <div style="font-size: 12px; color: #6b7280;">req</div>
+                    <div style="font-size: 28px; font-weight: 700;">{{ number_format($sReqs) }}</div>
                 </div>
                 <div>
                     <div style="font-size: 12px; color: #6b7280;">配信 MB</div>
-                    <div style="font-size: 28px; font-weight: 700;">{{ number_format((float) ($usageSummary['total_bytes'] ?? 0) / 1024 / 1024, 2) }}</div>
+                    <div style="font-size: 28px; font-weight: 700;">{{ number_format($sOut / 1024 / 1024, 2) }}</div>
                 </div>
+                <div>
+                    <div style="font-size: 12px; color: #6b7280;">origin MB</div>
+                    <div style="font-size: 28px; font-weight: 700;">{{ number_format($sIn / 1024 / 1024, 2) }}</div>
+                </div>
+                @if ($sRatio !== null)
+                    <div>
+                        <div style="font-size: 12px; color: #6b7280;">圧縮率</div>
+                        <div style="font-size: 28px; font-weight: 700; color: #059669;">{{ number_format($sRatio, 1) }}%</div>
+                    </div>
+                @endif
             </div>
             @if (! empty($usageByFormat))
                 <table>
-                    <thead><tr><th>format</th><th style="text-align: right;">reqs</th><th style="text-align: right;">MB</th></tr></thead>
+                    <thead><tr><th>format</th><th style="text-align: right;">req</th><th style="text-align: right;">origin MB</th><th style="text-align: right;">配信 MB</th><th style="text-align: right;">圧縮率</th></tr></thead>
                     <tbody>
                         @foreach ($usageByFormat as $row)
+                            @php
+                                $rIn = (float) ($row['input_bytes'] ?? 0);
+                                $rOut = (float) ($row['output_bytes'] ?? 0);
+                                $rRatio = $rIn > 0 ? ($rOut / $rIn) * 100 : null;
+                            @endphp
                             <tr>
                                 <td><code>{{ $row['format'] ?: '(none)' }}</code></td>
                                 <td style="text-align: right;">{{ number_format((int) $row['reqs']) }}</td>
-                                <td style="text-align: right;">{{ number_format((float) $row['total_bytes'] / 1024 / 1024, 2) }}</td>
+                                <td style="text-align: right;">{{ number_format($rIn / 1024 / 1024, 2) }}</td>
+                                <td style="text-align: right;">{{ number_format($rOut / 1024 / 1024, 2) }}</td>
+                                <td style="text-align: right; color: #059669; font-weight: 600;">
+                                    {{ $rRatio !== null ? number_format($rRatio, 1).'%' : '—' }}
+                                </td>
                             </tr>
                         @endforeach
                     </tbody>
