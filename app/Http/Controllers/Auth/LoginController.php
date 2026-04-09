@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
+use App\Services\TwoFactorService;
 use App\Support\AuditLogger;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -48,13 +50,87 @@ class LoginController extends Controller
         }
 
         RateLimiter::clear($key);
+
+        // Phase 13n: 2FA が有効なユーザはここで一旦ログアウトして challenge へ
+        $user = Auth::user();
+        if ($user->hasTwoFactorEnabled()) {
+            Auth::logout();
+            $request->session()->put('2fa.pending_user_id', $user->id);
+            $request->session()->put('2fa.remember', $request->boolean('remember'));
+            return redirect()->route('two-factor.challenge');
+        }
+
         $request->session()->regenerate();
         AuditLogger::record('auth.login',
-            ['type' => 'user', 'id' => Auth::id(), 'label' => Auth::user()->email],
+            ['type' => 'user', 'id' => $user->id, 'label' => $user->email],
         );
 
         // ロールに応じて admin / app のダッシュボードへ
-        return Auth::user()->isMaster()
+        return $user->isMaster()
+            ? redirect()->intended(route('admin.dashboard'))
+            : redirect()->intended(route('tenant.dashboard'));
+    }
+
+    /**
+     * Phase 13n: 2FA challenge 画面 (パスワード認証後の 6 桁入力)
+     */
+    public function showTwoFactorChallenge(Request $request): View|RedirectResponse
+    {
+        if (! $request->session()->has('2fa.pending_user_id')) {
+            return redirect()->route('login');
+        }
+        return view('auth.two_factor_challenge');
+    }
+
+    public function verifyTwoFactorChallenge(Request $request, TwoFactorService $tfa): RedirectResponse
+    {
+        $userId = $request->session()->get('2fa.pending_user_id');
+        if (! $userId) {
+            return redirect()->route('login');
+        }
+
+        $data = $request->validate([
+            'code' => ['required', 'string'],
+        ]);
+
+        $user = User::findOrFail($userId);
+        $code = trim($data['code']);
+        $verified = false;
+        $usedRecovery = false;
+
+        // TOTP 6 桁
+        if (preg_match('/^\d{6}$/', $code)) {
+            $verified = $tfa->verify($user->two_factor_secret, $code);
+        } else {
+            // リカバリーコード
+            $remaining = $tfa->consumeRecoveryCode($user->two_factor_recovery_codes ?? [], $code);
+            if ($remaining !== null) {
+                $user->forceFill(['two_factor_recovery_codes' => $remaining])->save();
+                $verified = true;
+                $usedRecovery = true;
+            }
+        }
+
+        if (! $verified) {
+            AuditLogger::record('auth.2fa_failed',
+                ['type' => 'user', 'id' => $user->id, 'label' => $user->email],
+            );
+            throw ValidationException::withMessages([
+                'code' => '2 段階認証コードが正しくありません。',
+            ]);
+        }
+
+        $remember = (bool) $request->session()->pull('2fa.remember', false);
+        $request->session()->forget('2fa.pending_user_id');
+        Auth::login($user, $remember);
+        $request->session()->regenerate();
+
+        AuditLogger::record($usedRecovery ? 'auth.2fa_recovery_used' : 'auth.login',
+            ['type' => 'user', 'id' => $user->id, 'label' => $user->email],
+            $usedRecovery ? ['method' => 'recovery_code'] : ['method' => 'totp'],
+        );
+
+        return $user->isMaster()
             ? redirect()->intended(route('admin.dashboard'))
             : redirect()->intended(route('tenant.dashboard'));
     }

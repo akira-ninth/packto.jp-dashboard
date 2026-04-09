@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\MasterController as AdminMasterController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\PasswordResetController;
 use App\Http\Controllers\Tenant\DashboardController as TenantDashboardController;
+use App\Http\Controllers\TwoFactorController;
 use Illuminate\Support\Facades\Route;
 
 $adminDomain = config('app.admin_domain');
@@ -40,6 +41,23 @@ Route::middleware('web')->group(function () {
     Route::post('/password/forgot', [PasswordResetController::class, 'sendResetLink']);
     Route::get('/password/reset/{token}', [PasswordResetController::class, 'showResetForm'])->name('password.reset');
     Route::post('/password/reset', [PasswordResetController::class, 'reset']);
+
+    // Phase 13n: 2FA challenge (パスワード認証直後)
+    Route::get('/two-factor/challenge', [LoginController::class, 'showTwoFactorChallenge'])->name('two-factor.challenge');
+    Route::post('/two-factor/challenge', [LoginController::class, 'verifyTwoFactorChallenge']);
+});
+
+/*
+|--------------------------------------------------------------------------
+| Phase 13n: 2FA セットアップ (ログイン後)
+|--------------------------------------------------------------------------
+*/
+Route::middleware(['web', 'auth'])->group(function () {
+    Route::get('/two-factor', [TwoFactorController::class, 'show'])->name('two-factor.show');
+    Route::post('/two-factor/setup', [TwoFactorController::class, 'setup'])->name('two-factor.setup');
+    Route::post('/two-factor/confirm', [TwoFactorController::class, 'confirm'])->name('two-factor.confirm');
+    Route::post('/two-factor/disable', [TwoFactorController::class, 'disable'])->name('two-factor.disable');
+    Route::post('/two-factor/recovery-codes', [TwoFactorController::class, 'regenerateRecoveryCodes'])->name('two-factor.recovery-codes');
 });
 
 /*

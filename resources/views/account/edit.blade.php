@@ -18,6 +18,22 @@
     </div>
 
     <div class="card" style="max-width: 540px;">
+        <h2>2 段階認証 (2FA)</h2>
+        @if (auth()->user()->hasTwoFactorEnabled())
+            <p style="background: #d1fae5; color: #065f46; padding: 8px 12px; border-radius: 6px; font-size: 13px; display: inline-block;">
+                ✅ 有効
+            </p>
+        @else
+            <p style="background: #fee2e2; color: #991b1b; padding: 8px 12px; border-radius: 6px; font-size: 13px; display: inline-block;">
+                ⚠️ 未設定
+            </p>
+        @endif
+        <p style="margin-top: 12px;">
+            <a href="{{ route('two-factor.show') }}" class="btn">2FA 設定</a>
+        </p>
+    </div>
+
+    <div class="card" style="max-width: 540px;">
         <h2>パスワード変更</h2>
         <form method="POST" action="{{ route('account.password.update') }}">
             @csrf
