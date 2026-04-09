@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\CustomerUserController as AdminCustomerUserContro
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\MasterController as AdminMasterController;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Auth\PasswordResetController;
 use App\Http\Controllers\Tenant\DashboardController as TenantDashboardController;
 use Illuminate\Support\Facades\Route;
 
@@ -33,6 +34,12 @@ Route::middleware('web')->group(function () {
     Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
     Route::post('/login', [LoginController::class, 'login']);
     Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
+
+    // Phase 13m: パスワードリセット (セルフサービス)
+    Route::get('/password/forgot', [PasswordResetController::class, 'showForgotForm'])->name('password.forgot');
+    Route::post('/password/forgot', [PasswordResetController::class, 'sendResetLink']);
+    Route::get('/password/reset/{token}', [PasswordResetController::class, 'showResetForm'])->name('password.reset');
+    Route::post('/password/reset', [PasswordResetController::class, 'reset']);
 });
 
 /*
