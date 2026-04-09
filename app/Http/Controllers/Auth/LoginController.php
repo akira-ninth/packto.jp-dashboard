@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Support\AuditLogger;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -40,6 +41,7 @@ class LoginController extends Controller
 
         if (! Auth::attempt($credentials, $request->boolean('remember'))) {
             RateLimiter::hit($key, self::DECAY_SECONDS);
+            AuditLogger::record('auth.login_failed', [], ['email' => $credentials['email']]);
             throw ValidationException::withMessages([
                 'email' => 'メールアドレスまたはパスワードが正しくありません。',
             ]);
@@ -47,6 +49,9 @@ class LoginController extends Controller
 
         RateLimiter::clear($key);
         $request->session()->regenerate();
+        AuditLogger::record('auth.login',
+            ['type' => 'user', 'id' => Auth::id(), 'label' => Auth::user()->email],
+        );
 
         // ロールに応じて admin / app のダッシュボードへ
         return Auth::user()->isMaster()
@@ -69,9 +74,15 @@ class LoginController extends Controller
 
     public function logout(Request $request): RedirectResponse
     {
+        $userId = Auth::id();
+        $email = Auth::user()?->email;
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
+
+        AuditLogger::record('auth.logout',
+            ['type' => 'user', 'id' => $userId, 'label' => $email],
+        );
 
         return redirect()->route('login');
     }

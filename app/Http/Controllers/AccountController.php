@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Support\AuditLogger;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -28,6 +29,10 @@ class AccountController extends Controller
         $request->user()->update([
             'password' => Hash::make($data['password']),
         ]);
+
+        AuditLogger::record('auth.password_change',
+            ['type' => 'user', 'id' => $request->user()->id, 'label' => $request->user()->email],
+        );
 
         return redirect()->route('account.edit')->with('status', 'パスワードを変更しました。');
     }

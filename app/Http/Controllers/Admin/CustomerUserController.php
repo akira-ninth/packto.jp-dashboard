@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Customer;
 use App\Models\User;
+use App\Support\AuditLogger;
 use App\Support\InvitationMailer;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -40,6 +41,11 @@ class CustomerUserController extends Controller
 
         $mailSent = InvitationMailer::send($user, $tempPassword);
 
+        AuditLogger::record('customer_user.create',
+            ['type' => 'user', 'id' => $user->id, 'label' => $user->email],
+            ['customer' => $customer->subdomain, 'mail_sent' => $mailSent],
+        );
+
         return redirect()
             ->route('admin.customers.show', $customer)
             ->with('temp_credentials', [
@@ -68,10 +74,17 @@ class CustomerUserController extends Controller
             abort(403, '自分自身は削除できません');
         }
 
+        $email = $user->email;
+        $userId = $user->id;
         $user->delete();
+
+        AuditLogger::record('customer_user.delete',
+            ['type' => 'user', 'id' => $userId, 'label' => $email],
+            ['customer' => $customer->subdomain],
+        );
 
         return redirect()
             ->route('admin.customers.show', $customer)
-            ->with('status', "{$user->email} を削除しました");
+            ->with('status', "{$email} を削除しました");
     }
 }

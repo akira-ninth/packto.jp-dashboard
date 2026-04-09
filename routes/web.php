@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AccountController;
+use App\Http\Controllers\Admin\AuditLogController as AdminAuditLogController;
 use App\Http\Controllers\Admin\CustomerController as AdminCustomerController;
 use App\Http\Controllers\Admin\CustomerUserController as AdminCustomerUserController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
@@ -66,6 +67,9 @@ Route::domain($adminDomain)
         Route::get('masters', [AdminMasterController::class, 'index'])->name('masters.index');
         Route::post('masters', [AdminMasterController::class, 'store'])->name('masters.store');
         Route::delete('masters/{master}', [AdminMasterController::class, 'destroy'])->name('masters.destroy');
+
+        // Phase 13l: 監査ログ閲覧
+        Route::get('audit-logs', [AdminAuditLogController::class, 'index'])->name('audit-logs.index');
     });
 
 /*

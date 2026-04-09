@@ -8,6 +8,7 @@ use App\Models\Plan;
 use App\Models\User;
 use App\Services\CloudflareAnalyticsService;
 use App\Services\CloudflareKvService;
+use App\Support\AuditLogger;
 use App\Support\InvitationMailer;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -61,6 +62,11 @@ class CustomerController extends Controller
         $customer->load('plan');
         $this->kv->putCustomer($customer);
 
+        AuditLogger::record('customer.create',
+            ['type' => 'customer', 'id' => $customer->id, 'label' => $customer->subdomain],
+            ['plan' => $customer->plan->slug, 'origin_url' => $customer->origin_url],
+        );
+
         // 初期ユーザを作成 (オプション)
         if (! empty($data['create_user'])) {
             $tempPassword = Str::password(16, true, true, false);
@@ -73,6 +79,11 @@ class CustomerController extends Controller
             ]);
 
             $mailSent = InvitationMailer::send($user, $tempPassword);
+
+            AuditLogger::record('customer_user.create',
+                ['type' => 'user', 'id' => $user->id, 'label' => $user->email],
+                ['customer' => $customer->subdomain, 'mail_sent' => $mailSent],
+            );
 
             return redirect()
                 ->route('admin.customers.show', $customer)
@@ -116,9 +127,15 @@ class CustomerController extends Controller
 
         $data['active'] = (bool) ($data['active'] ?? false);
 
+        $before = $customer->only(['display_name', 'origin_url', 'plan_id', 'active']);
         $customer->update($data);
         $customer->load('plan');
         $this->kv->putCustomer($customer);
+
+        AuditLogger::record('customer.update',
+            ['type' => 'customer', 'id' => $customer->id, 'label' => $customer->subdomain],
+            ['before' => $before, 'after' => $customer->only(['display_name', 'origin_url', 'plan_id', 'active'])],
+        );
 
         return redirect()->route('admin.customers.show', $customer)->with('status', 'updated');
     }
@@ -126,8 +143,13 @@ class CustomerController extends Controller
     public function destroy(Customer $customer): RedirectResponse
     {
         $subdomain = $customer->subdomain;
+        $customerId = $customer->id;
         $customer->delete();
         $this->kv->deleteCustomer($subdomain);
+
+        AuditLogger::record('customer.delete',
+            ['type' => 'customer', 'id' => $customerId, 'label' => $subdomain],
+        );
 
         return redirect()->route('admin.customers.index')->with('status', 'deleted');
     }

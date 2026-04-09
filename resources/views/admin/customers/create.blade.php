@@ -7,6 +7,7 @@
         <a href="{{ route('admin.dashboard') }}">ダッシュボード</a>
         <a href="{{ route('admin.customers.index') }}">顧客一覧</a>
         <a href="{{ route('admin.masters.index') }}">マスター</a>
+        <a href="{{ route('admin.audit-logs.index') }}">監査ログ</a>
     </nav>
 @endsection
 

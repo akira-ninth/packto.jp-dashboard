@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Support\AuditLogger;
 use App\Support\InvitationMailer;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -48,6 +49,11 @@ class MasterController extends Controller
 
         $mailSent = InvitationMailer::send($user, $tempPassword);
 
+        AuditLogger::record('master.create',
+            ['type' => 'user', 'id' => $user->id, 'label' => $user->email],
+            ['mail_sent' => $mailSent],
+        );
+
         return redirect()
             ->route('admin.masters.index')
             ->with('temp_credentials', [
@@ -76,7 +82,12 @@ class MasterController extends Controller
         }
 
         $email = $master->email;
+        $masterId = $master->id;
         $master->delete();
+
+        AuditLogger::record('master.delete',
+            ['type' => 'user', 'id' => $masterId, 'label' => $email],
+        );
 
         return redirect()
             ->route('admin.masters.index')
