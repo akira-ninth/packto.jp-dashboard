@@ -115,4 +115,13 @@ return [
         'name' => env('MAIL_FROM_NAME', env('APP_NAME', 'Laravel')),
     ],
 
+    /*
+     * Phase 13j: 招待メール等の Reply-To。FROM=noreply で受信箱が荒れないように、
+     * 返信は support@ などの実アドレスに飛ばす。
+     */
+    'reply_to' => [
+        'address' => env('MAIL_REPLY_TO_ADDRESS'),
+        'name' => env('MAIL_REPLY_TO_NAME'),
+    ],
+
 ];

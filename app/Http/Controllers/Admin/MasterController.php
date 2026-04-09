@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Support\InvitationMailer;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -37,7 +38,7 @@ class MasterController extends Controller
         ]);
 
         $tempPassword = Str::password(16, true, true, false);
-        User::create([
+        $user = User::create([
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => Hash::make($tempPassword),
@@ -45,11 +46,14 @@ class MasterController extends Controller
             'customer_id' => null,
         ]);
 
+        $mailSent = InvitationMailer::send($user, $tempPassword);
+
         return redirect()
             ->route('admin.masters.index')
             ->with('temp_credentials', [
                 'email' => $data['email'],
                 'password' => $tempPassword,
+                'mail_sent' => $mailSent,
             ]);
     }
 

@@ -8,6 +8,7 @@ use App\Models\Plan;
 use App\Models\User;
 use App\Services\CloudflareAnalyticsService;
 use App\Services\CloudflareKvService;
+use App\Support\InvitationMailer;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -61,10 +62,9 @@ class CustomerController extends Controller
         $this->kv->putCustomer($customer);
 
         // 初期ユーザを作成 (オプション)
-        $tempPassword = null;
         if (! empty($data['create_user'])) {
             $tempPassword = Str::password(16, true, true, false);
-            User::create([
+            $user = User::create([
                 'name' => $data['user_name'],
                 'email' => $data['user_email'],
                 'password' => Hash::make($tempPassword),
@@ -72,12 +72,14 @@ class CustomerController extends Controller
                 'customer_id' => $customer->id,
             ]);
 
-            // ワンタイム表示のため flash session に乗せる
+            $mailSent = InvitationMailer::send($user, $tempPassword);
+
             return redirect()
                 ->route('admin.customers.show', $customer)
                 ->with('temp_credentials', [
                     'email' => $data['user_email'],
                     'password' => $tempPassword,
+                    'mail_sent' => $mailSent,
                 ]);
         }
 

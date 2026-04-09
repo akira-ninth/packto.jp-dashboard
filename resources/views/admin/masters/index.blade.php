@@ -14,10 +14,20 @@
     <h1>マスターアカウント</h1>
 
     @if (session('temp_credentials'))
+        @php $mailSent = session('temp_credentials.mail_sent'); @endphp
         <div class="card" style="background: #fef3c7; border: 1px solid #f59e0b;">
             <h2 style="margin-top: 0;">⚠️ 初期ログイン情報 (この画面でのみ表示されます)</h2>
+            @if ($mailSent === true)
+                <p style="font-size: 13px; color: #065f46; background: #d1fae5; padding: 8px 12px; border-radius: 4px;">
+                    ✅ 招待メールを <code>{{ session('temp_credentials.email') }}</code> に送信しました。
+                </p>
+            @elseif ($mailSent === false)
+                <p style="font-size: 13px; color: #991b1b; background: #fee2e2; padding: 8px 12px; border-radius: 4px;">
+                    ⚠️ メール送信に失敗しました。下記の情報を手動で控えてください。
+                </p>
+            @endif
             <p style="font-size: 13px; color: #78350f;">
-                控えてください。次にこのページをリロードすると消えます。
+                次にこのページをリロードすると消えます。
                 追加されたマスターは初回ログイン後に <code>/account</code> でパスワードを変更してください。
             </p>
             <table>
