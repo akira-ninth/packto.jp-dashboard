@@ -55,12 +55,16 @@ class LoginController extends Controller
     }
 
     /**
-     * Throttle key: email を小文字化して IP と結合 (email enumeration を避けるため
-     * password 試行は email + IP のペア、両方ともこのコントローラに到達するときだけ hit)
+     * Throttle key: email を小文字化して IP と結合。
+     *
+     * Cloudflare proxied 環境では bootstrap/app.php の trustProxies 設定で
+     * $request->ip() が CF-Connecting-IP 由来の実 IP になる。念のため
+     * CF-Connecting-IP ヘッダを直接優先して二重防御。
      */
     private function throttleKey(Request $request): string
     {
-        return 'login:'.Str::lower((string) $request->input('email')).'|'.$request->ip();
+        $ip = $request->header('CF-Connecting-IP') ?: $request->ip();
+        return 'login:'.Str::lower((string) $request->input('email')).'|'.$ip;
     }
 
     public function logout(Request $request): RedirectResponse
