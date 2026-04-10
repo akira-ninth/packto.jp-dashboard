@@ -24,6 +24,7 @@
                     <th>状態</th>
                     <th class="text-end">先月 req</th>
                     <th class="text-end">先月 転送量</th>
+                    <th>最終ログイン</th>
                     <th class="text-end"></th>
                 </tr>
             </thead>
@@ -34,9 +35,12 @@
                         $reqs = $usage ? (int) $usage['reqs'] : 0;
                         $outMb = $usage ? (float) $usage['output_bytes'] / 1024 / 1024 : 0;
                     @endphp
+                    @php
+                        $lastLogin = $customer->users->max('last_login_at');
+                    @endphp
                     <tr>
-                        <td><code class="c-blue-500">{{ $customer->subdomain }}.packto.jp</code></td>
-                        <td>{{ $customer->display_name }}</td>
+                        <td><a href="{{ route('admin.customers.show', $customer) }}" class="c-blue-500 fw-600 td-n">{{ $customer->subdomain }}.packto.jp</a></td>
+                        <td><a href="{{ route('admin.customers.show', $customer) }}" class="c-grey-900 td-n">{{ $customer->display_name }}</a></td>
                         <td><span class="badge badge-plan-{{ $customer->plan->slug }}">{{ $customer->plan->name }}</span></td>
                         <td>
                             @if ($customer->active)
@@ -59,6 +63,13 @@
                                 <span class="c-grey-400">—</span>
                             @endif
                         </td>
+                        <td>
+                            @if ($lastLogin)
+                                <span class="fsz-sm c-grey-600">{{ $lastLogin->format('m/d H:i') }}</span>
+                            @else
+                                <span class="c-grey-400 fsz-sm">—</span>
+                            @endif
+                        </td>
                         <td class="text-end">
                             <a href="{{ route('admin.customers.show', $customer) }}" class="btn btn-outline-secondary btn-sm">
                                 <i class="fa fa-eye mR-5"></i> 詳細
@@ -66,7 +77,7 @@
                         </td>
                     </tr>
                 @empty
-                    <tr><td colspan="7" class="ta-c c-grey-600 pY-20">顧客がいません</td></tr>
+                    <tr><td colspan="8" class="ta-c c-grey-600 pY-20">顧客がいません</td></tr>
                 @endforelse
             </tbody>
         </table>

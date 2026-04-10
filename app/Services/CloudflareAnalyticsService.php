@@ -106,6 +106,25 @@ class CloudflareAnalyticsService
      *
      * @return array<string, array{reqs: string, output_bytes: float, input_bytes: float}>
      */
+    /**
+     * 直近の大きい配信画像 (output_bytes 降順)
+     * blob5 = pathname (worker から送信)
+     */
+    public function getRecentLargeImages(string $subdomain, int $limit = 20): array
+    {
+        $sql = sprintf(
+            "SELECT timestamp, blob5 AS path, blob2 AS format, double1 AS output_bytes, double2 AS input_bytes "
+            . "FROM imagy_requests "
+            . "WHERE index1 = '%s' AND blob1 = 'image' AND double1 > 50000 "
+            . "AND timestamp > NOW() - INTERVAL '7' DAY "
+            . "ORDER BY double1 DESC LIMIT %d",
+            addslashes($subdomain),
+            max(1, min(100, $limit)),
+        );
+
+        return $this->query($sql);
+    }
+
     public function getAllCustomersSummary(int $days = 30): array
     {
         $sql = sprintf(

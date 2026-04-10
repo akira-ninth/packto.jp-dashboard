@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\MasterController as AdminMasterController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\PasswordResetController;
 use App\Http\Controllers\Tenant\DashboardController as TenantDashboardController;
+use App\Http\Controllers\Tenant\SetupController as TenantSetupController;
 use App\Http\Controllers\TwoFactorController;
 use Illuminate\Support\Facades\Route;
 
@@ -107,4 +108,6 @@ Route::domain($tenantDomain)
     ->name('tenant.')
     ->group(function (): void {
         Route::get('/', [TenantDashboardController::class, 'index'])->name('dashboard');
+        Route::get('/setup', [TenantSetupController::class, 'guide'])->name('setup');
+        Route::post('/setup/check', [TenantSetupController::class, 'check'])->name('setup.check');
     });

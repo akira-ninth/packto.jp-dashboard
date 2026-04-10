@@ -25,7 +25,7 @@ class CustomerController extends Controller
 
     public function index(): View
     {
-        $customers = Customer::with('plan')->orderBy('subdomain')->get();
+        $customers = Customer::with(['plan', 'users'])->orderBy('subdomain')->get();
         $usageMap = $this->analytics->getAllCustomersSummary(30);
 
         return view('admin.customers.index', [
@@ -119,6 +119,7 @@ class CustomerController extends Controller
             'usageByDay' => $this->analytics->getCustomerByDay($customer->subdomain, $days),
             'usageByFormat' => $this->analytics->getCustomerByFormat($customer->subdomain, $days),
             'usageByCache' => $this->analytics->getCustomerByCacheStatus($customer->subdomain, $days),
+            'largeImages' => $this->analytics->getRecentLargeImages($customer->subdomain, 20),
         ]);
     }
 

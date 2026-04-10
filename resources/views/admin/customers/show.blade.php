@@ -206,6 +206,35 @@
         <div class="alert alert-info mB-20"><i class="fa fa-info-circle mR-5"></i> 直近 {{ $days }} 日のリクエストがありません</div>
     @endif
 
+    {{-- Large images --}}
+    @if (! empty($largeImages))
+        <div class="bgc-white bd bdrs-3 p-20 mB-20">
+            <h4 class="c-grey-900 mB-20"><i class="ti-image mR-10 c-grey-500"></i>直近の大きい配信画像 (7 日 / 50KB 以上)</h4>
+            <div class="table-responsive">
+                <table class="table table-sm">
+                    <thead><tr><th>パス</th><th>format</th><th class="text-end">origin</th><th class="text-end">配信</th><th class="text-end">圧縮率</th><th>日時</th></tr></thead>
+                    <tbody>
+                        @foreach ($largeImages as $img)
+                            @php
+                                $iIn = (float)($img['input_bytes'] ?? 0);
+                                $iOut = (float)($img['output_bytes'] ?? 0);
+                                $iR = $iIn > 0 ? ($iOut / $iIn) * 100 : null;
+                            @endphp
+                            <tr>
+                                <td><code class="fsz-sm" style="word-break: break-all;">{{ $img['path'] ?? '—' }}</code></td>
+                                <td><code>{{ $img['format'] ?? '—' }}</code></td>
+                                <td class="text-end">{{ $iIn > 0 ? number_format($iIn / 1024, 1).' KB' : '—' }}</td>
+                                <td class="text-end">{{ $iOut > 0 ? number_format($iOut / 1024, 1).' KB' : '—' }}</td>
+                                <td class="text-end c-green-500 fw-600">{{ $iR !== null ? number_format($iR, 1).'%' : '—' }}</td>
+                                <td><span class="fsz-sm c-grey-500">{{ $img['timestamp'] ?? '' }}</span></td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    @endif
+
     {{-- Users --}}
     <div class="bgc-white bd bdrs-3 p-20 mB-20">
         <h4 class="c-grey-900 mB-20"><i class="ti-user mR-10 c-grey-500"></i>所属ユーザ ({{ $customer->users->count() }})</h4>

@@ -50,6 +50,12 @@
                         <span class="title">ダッシュボード</span>
                     </a>
                 </li>
+                <li class="nav-item @if(request()->routeIs('tenant.setup*')) actived @endif">
+                    <a class="sidebar-link" href="{{ route('tenant.setup') }}">
+                        <span class="icon-holder"><i class="c-green-500 ti-tag"></i></span>
+                        <span class="title">セットアップ</span>
+                    </a>
+                </li>
                 <li class="nav-item @if(request()->routeIs('account.*')) actived @endif">
                     <a class="sidebar-link" href="{{ route('account.edit') }}">
                         <span class="icon-holder"><i class="c-grey-500 ti-settings"></i></span>

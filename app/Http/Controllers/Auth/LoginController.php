@@ -51,8 +51,10 @@ class LoginController extends Controller
 
         RateLimiter::clear($key);
 
-        // Phase 13n: 2FA が有効なユーザはここで一旦ログアウトして challenge へ
         $user = Auth::user();
+        $user->forceFill(['last_login_at' => now()])->save();
+
+        // Phase 13n: 2FA が有効なユーザはここで一旦ログアウトして challenge へ
         if ($user->hasTwoFactorEnabled()) {
             Auth::logout();
             $request->session()->put('2fa.pending_user_id', $user->id);
@@ -122,6 +124,7 @@ class LoginController extends Controller
 
         $remember = (bool) $request->session()->pull('2fa.remember', false);
         $request->session()->forget('2fa.pending_user_id');
+        $user->forceFill(['last_login_at' => now()])->save();
         Auth::login($user, $remember);
         $request->session()->regenerate();
 
