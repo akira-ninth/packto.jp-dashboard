@@ -37,7 +37,7 @@
 
                 <p style="margin: 16px 0; font-size: 13px; color: #92400e; background: #fef3c7; padding: 12px; border-radius: 6px;">
                     ⚠️ <strong>セキュリティ上のお願い:</strong><br>
-                    初期パスワードは 1 回限りの仮パスワードです。ログイン後、画面右上の「アカウント」メニューから新しいパスワードに変更してください。
+                    初期パスワードは仮パスワードです。ログイン後、画面右上の「アカウント」メニューから新しいパスワードに変更してください。
                 </p>
 
                 <p style="margin: 16px 0 0; font-size: 12px; color: #9ca3af;">
