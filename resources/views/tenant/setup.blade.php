@@ -7,12 +7,12 @@
 
     @if ($customer)
         {{-- サーバー検出結果 --}}
-        @if ($serverType)
+        @if ($serverType === 'nginx')
             <div class="alert alert-info fsz-sm mB-20">
                 <i class="fa fa-server mR-5"></i>
-                <code>{{ $origin }}</code> のサーバーは
-                <strong>{{ strtoupper($serverType) }}</strong> と検出されました。
-                該当するタブの設定を使用してください。
+                <code>{{ $origin }}</code> は <strong>Nginx</strong> が検出されましたが、
+                多くの共有ホスティング (Xserver 等) では裏側で Apache が動いており <code>.htaccess</code> が利用可能です。
+                まず Apache タブの設定をお試しください。
             </div>
         @endif
 
@@ -23,12 +23,12 @@
             {{-- Tab navigation --}}
             <ul class="nav nav-tabs mB-15" role="tablist">
                 <li class="nav-item">
-                    <a class="nav-link {{ $serverType === 'nginx' ? '' : 'active' }}" data-bs-toggle="tab" href="#tab-apache" role="tab">
+                    <a class="nav-link active" data-bs-toggle="tab" href="#tab-apache" role="tab">
                         Apache (.htaccess)
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link {{ $serverType === 'nginx' ? 'active' : '' }}" data-bs-toggle="tab" href="#tab-nginx" role="tab">
+                    <a class="nav-link" data-bs-toggle="tab" href="#tab-nginx" role="tab">
                         Nginx
                     </a>
                 </li>
@@ -36,7 +36,7 @@
 
             <div class="tab-content">
                 {{-- Apache --}}
-                <div class="tab-pane fade {{ $serverType === 'nginx' ? '' : 'show active' }}" id="tab-apache" role="tabpanel">
+                <div class="tab-pane fade show active" id="tab-apache" role="tabpanel">
                     <p class="c-grey-600 fsz-sm mB-10">
                         サイトのルートディレクトリにある <code>.htaccess</code> に以下を追記してください。
                     </p>
@@ -59,7 +59,7 @@ RewriteRule ^(.+\.(jpg|jpeg|png|gif|webp|js|mjs|css|svg|json))$ https://{{ $subd
                 </div>
 
                 {{-- Nginx --}}
-                <div class="tab-pane fade {{ $serverType === 'nginx' ? 'show active' : '' }}" id="tab-nginx" role="tabpanel">
+                <div class="tab-pane fade" id="tab-nginx" role="tabpanel">
                     <p class="c-grey-600 fsz-sm mB-10">
                         Nginx の設定ファイル (通常 <code>/etc/nginx/sites-available/</code>) の <code>server</code> ブロック内に以下を追記してください。
                     </p>
