@@ -3,36 +3,35 @@
 @section('title', 'ログイン | Packto Console')
 
 @section('content')
-    <h1 style="text-align: center;">Packto Console ログイン</h1>
+    <div class="card">
+        <div class="card-body p-4">
+            <h1 class="h5 fw-bold text-center mb-4">Packto Console ログイン</h1>
 
-    <div class="card" style="max-width: 420px; margin: 24px auto;">
-        @if (session('status'))
-            <p style="background: #d1fae5; color: #065f46; padding: 12px; border-radius: 6px; font-size: 13px; margin-bottom: 16px;">
-                {{ session('status') }}
-            </p>
-        @endif
+            @if (session('status'))
+                <div class="alert alert-success small">{{ session('status') }}</div>
+            @endif
 
-        <form method="POST" action="{{ url('/login') }}">
-            @csrf
-
-            <label>メールアドレス</label>
-            <input type="email" name="email" value="{{ old('email') }}" required autofocus>
-            @error('email')<div class="errors">{{ $message }}</div>@enderror
-
-            <label>パスワード</label>
-            <input type="password" name="password" required>
-            @error('password')<div class="errors">{{ $message }}</div>@enderror
-
-            <label style="font-weight: normal; margin-top: 16px;">
-                <input type="checkbox" name="remember" value="1"> ログイン状態を保持する
-            </label>
-
-            <p style="margin-top: 24px;">
-                <button type="submit" class="btn" style="border: none; cursor: pointer; width: 100%;">ログイン</button>
-            </p>
-            <p style="text-align: center; margin-top: 16px;">
-                <a href="{{ route('password.forgot') }}" style="color: #6b7280; font-size: 13px;">パスワードを忘れた方はこちら</a>
-            </p>
-        </form>
+            <form method="POST" action="{{ url('/login') }}">
+                @csrf
+                <div class="mb-3">
+                    <label class="form-label">メールアドレス</label>
+                    <input type="email" name="email" value="{{ old('email') }}" class="form-control @error('email') is-invalid @enderror" required autofocus>
+                    @error('email')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">パスワード</label>
+                    <input type="password" name="password" class="form-control @error('password') is-invalid @enderror" required>
+                    @error('password')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                </div>
+                <div class="form-check mb-3">
+                    <input type="checkbox" name="remember" value="1" class="form-check-input" id="remember">
+                    <label for="remember" class="form-check-label small">ログイン状態を保持する</label>
+                </div>
+                <button type="submit" class="btn btn-primary w-100">ログイン</button>
+                <p class="text-center mt-3 mb-0">
+                    <a href="{{ route('password.forgot') }}" class="text-muted small">パスワードを忘れた方はこちら</a>
+                </p>
+            </form>
+        </div>
     </div>
 @endsection

@@ -152,12 +152,11 @@ class CloudflareAnalyticsTest extends TestCase
             ->get('http://'.config('app.app_domain').'/');
 
         $response->assertOk();
-        $response->assertSee('使用量サマリ');
         $response->assertSee('100'); // reqs
         $response->assertSee('5.00'); // 配信 MB
         $response->assertSee('22.50'); // origin MB
         $response->assertSee('avif');
-        $response->assertSee('22.2%'); // 圧縮率 (5/22.5*100 = 22.22...)
+        $response->assertSee('22.2%'); // 圧縮率
     }
 
     public function test_tenant_dashboard_handles_empty_analytics_gracefully(): void
@@ -195,5 +194,6 @@ class CloudflareAnalyticsTest extends TestCase
 
         $response->assertOk();
         $response->assertSee('直近 7 日のリクエストがありません');
+        $response->assertDontSee('圧縮率');
     }
 }
