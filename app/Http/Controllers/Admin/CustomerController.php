@@ -55,6 +55,7 @@ class CustomerController extends Controller
         ]);
 
         $data['active'] = (bool) ($data['active'] ?? true);
+        $data['origin_url'] = rtrim($data['origin_url'], '/');
 
         $customer = Customer::create([
             'subdomain' => $data['subdomain'],
@@ -162,6 +163,7 @@ class CustomerController extends Controller
         ]);
 
         $data['active'] = (bool) ($data['active'] ?? false);
+        $data['origin_url'] = rtrim($data['origin_url'], '/');
 
         $before = $customer->only(['display_name', 'origin_url', 'plan_id', 'active']);
         $customer->update($data);
