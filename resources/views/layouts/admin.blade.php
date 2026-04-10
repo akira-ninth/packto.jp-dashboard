@@ -129,7 +129,7 @@
                 <li class="nav-item @if(request()->routeIs('admin.masters.*')) actived @endif">
                     <a class="sidebar-link" href="{{ route('admin.masters.index') }}">
                         <span class="icon-holder"><i class="c-deep-purple-500 ti-shield"></i></span>
-                        <span class="title">マスター</span>
+                        <span class="title">管理ユーザー</span>
                     </a>
                 </li>
                 <li class="nav-item @if(request()->routeIs('admin.audit-logs.*')) actived @endif">

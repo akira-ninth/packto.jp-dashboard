@@ -1,9 +1,9 @@
 @extends('layouts.admin')
 
-@section('title', 'マスター管理 | Packto Console')
+@section('title', '管理ユーザー | Packto Console')
 
 @section('content')
-    <h4 class="c-grey-900 mT-10 mB-30">マスターアカウント</h4>
+    <h4 class="c-grey-900 mT-10 mB-30">管理ユーザー</h4>
 
     @if (session('temp_credentials'))
         @php $mailSent = session('temp_credentials.mail_sent'); @endphp
@@ -20,7 +20,7 @@
             @endif
             <p class="c-grey-600 fsz-sm mB-15">
                 次にこのページをリロードすると消えます。
-                追加されたマスターは初回ログイン後に <code>/account</code> でパスワードを変更してください。
+                追加された管理ユーザーは初回ログイン後に <code>/account</code> でパスワードを変更してください。
             </p>
             <table class="table table-sm table-borderless" style="max-width: 500px;">
                 <tr><th style="width: 140px;">ログイン URL</th><td><code>https://admin.packto.jp/login</code></td></tr>
@@ -32,7 +32,7 @@
 
     {{-- Master list --}}
     <div class="bgc-white bd bdrs-3 p-20 mB-20">
-        <h4 class="c-grey-900 mB-20"><i class="ti-shield mR-10 c-grey-500"></i>登録済みマスター ({{ $masters->count() }})</h4>
+        <h4 class="c-grey-900 mB-20"><i class="ti-shield mR-10 c-grey-500"></i>登録済み管理ユーザー ({{ $masters->count() }})</h4>
         <table class="table">
             <thead>
                 <tr><th>名前</th><th>メール</th><th>作成日</th><th class="text-end"></th></tr>
@@ -64,7 +64,7 @@
 
     {{-- Add master form --}}
     <div class="bgc-white bd bdrs-3 p-20 mB-20">
-        <h4 class="c-grey-900 mB-20"><i class="ti-plus mR-10 c-grey-500"></i>マスター追加</h4>
+        <h4 class="c-grey-900 mB-20"><i class="ti-plus mR-10 c-grey-500"></i>管理ユーザー追加</h4>
         <form method="POST" action="{{ route('admin.masters.store') }}">
             @csrf
             <div class="row gap-20">

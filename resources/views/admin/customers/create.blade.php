@@ -20,14 +20,14 @@
             @csrf
 
             <div class="mB-20">
-                <label class="form-label">サブドメイン (英小文字・数字・ハイフン)</label>
+                <label class="form-label">ワーカードメイン (英小文字・数字・ハイフン)</label>
                 <input type="text" name="subdomain" value="{{ old('subdomain') }}" class="form-control" required>
                 @error('subdomain')<div class="c-red-500 mT-5 fsz-sm">{{ $message }}</div>@enderror
                 <div class="form-text">→ <code>{value}.packto.jp</code></div>
             </div>
 
             <div class="mB-20">
-                <label class="form-label">表示名</label>
+                <label class="form-label">サイト名</label>
                 <input type="text" name="display_name" value="{{ old('display_name') }}" class="form-control" required>
                 @error('display_name')<div class="c-red-500 mT-5 fsz-sm">{{ $message }}</div>@enderror
             </div>

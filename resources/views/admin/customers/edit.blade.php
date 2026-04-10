@@ -21,12 +21,12 @@
             @method('PATCH')
 
             <div class="mB-20">
-                <label class="form-label">サブドメイン (変更不可)</label>
+                <label class="form-label">ワーカードメイン (変更不可)</label>
                 <input type="text" value="{{ $customer->subdomain }}.packto.jp" class="form-control" disabled>
             </div>
 
             <div class="mB-20">
-                <label class="form-label">表示名</label>
+                <label class="form-label">サイト名</label>
                 <input type="text" name="display_name" value="{{ old('display_name', $customer->display_name) }}" class="form-control" required>
                 @error('display_name')<div class="c-red-500 mT-5 fsz-sm">{{ $message }}</div>@enderror
             </div>

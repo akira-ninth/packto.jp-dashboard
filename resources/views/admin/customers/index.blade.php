@@ -38,10 +38,10 @@
                     @endphp
                     <tr>
                         <td style="white-space: nowrap;">
-                            <a href="{{ route('admin.customers.show', $customer) }}" class="btn btn-outline-secondary btn-sm mR-5" title="詳細">
+                            <a href="{{ route('admin.customers.show', $customer) }}" class="btn btn-sm" style="background:#e9ecef;color:#495057;border:1px solid #ced4da;" title="詳細">
                                 <i class="fa fa-eye"></i>
                             </a>
-                            <a href="{{ route('admin.customers.edit', $customer) }}" class="btn btn-outline-secondary btn-sm" title="編集">
+                            <a href="{{ route('admin.customers.edit', $customer) }}" class="btn btn-sm mL-5" style="background:#e9ecef;color:#495057;border:1px solid #ced4da;" title="編集">
                                 <i class="fa fa-pencil"></i>
                             </a>
                         </td>
