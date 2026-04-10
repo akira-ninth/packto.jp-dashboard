@@ -27,7 +27,7 @@
                             <div class="peers ai-c fxw-nw">
                                 <div class="peer">
                                     <div class="logo">
-                                        <img src="/adminator/logo.svg" alt="" style="width: 30px; height: 30px;">
+                                        <img src="/adminator/logo.svg" alt="" style="width: 30px; height: 30px; vertical-align: middle;">
                                     </div>
                                 </div>
                                 <div class="peer peer-greed">
