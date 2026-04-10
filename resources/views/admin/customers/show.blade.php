@@ -11,7 +11,7 @@
             <a href="{{ route('admin.customers.edit', $customer) }}" class="btn btn-primary btn-sm mR-10">
                 <i class="fa fa-pencil mR-5"></i> 編集
             </a>
-            <form method="POST" action="{{ route('admin.customers.destroy', $customer) }}" class="d-ib mR-10" onsubmit="return confirm('{{ $customer->display_name }} を削除しますか？\n所属ユーザも全て削除され、Cloudflare KV からも消去されます。この操作は取り消せません。');">
+            <form method="POST" action="{{ route('admin.customers.destroy', $customer) }}" class="d-ib mR-10" onsubmit="return confirm('{{ $customer->display_name }} を削除しますか？\n所属ユーザも全て削除されます。この操作は取り消せません。');">
                 @csrf
                 @method('DELETE')
                 <button type="submit" class="btn btn-danger btn-sm">
