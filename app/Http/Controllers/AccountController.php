@@ -19,6 +19,24 @@ class AccountController extends Controller
         return view('account.edit');
     }
 
+    public function updateEmail(Request $request): RedirectResponse
+    {
+        $data = $request->validate([
+            'email' => ['required', 'email', 'unique:users,email,'.$request->user()->id],
+            'current_password' => ['required', 'current_password'],
+        ]);
+
+        $oldEmail = $request->user()->email;
+        $request->user()->update(['email' => $data['email']]);
+
+        AuditLogger::record('auth.email_change',
+            ['type' => 'user', 'id' => $request->user()->id, 'label' => $request->user()->email],
+            ['old_email' => $oldEmail],
+        );
+
+        return redirect()->route('account.edit')->with('status', 'メールアドレスを変更しました。');
+    }
+
     public function updatePassword(Request $request): RedirectResponse
     {
         $data = $request->validate([

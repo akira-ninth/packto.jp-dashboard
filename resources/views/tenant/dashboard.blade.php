@@ -34,7 +34,7 @@
             </div>
             <div class="col-md-4">
                 <div class="layers bd bgc-white p-20">
-                    <div class="layer w-100 mB-10"><h6 class="lh-1">Origin</h6></div>
+                    <div class="layer w-100 mB-10"><h6 class="lh-1">対象URL</h6></div>
                     <div class="layer w-100">
                         <div class="peers ai-c fxw-nw">
                             <div class="peer mR-15">
@@ -94,33 +94,33 @@
                                 <div class="peer peer-greed">
                                     <span class="d-ib lh-0 va-m fw-600 bdrs-10em pX-15 pY-15 bgc-blue-50 c-blue-500"><i class="ti-bolt"></i></span>
                                 </div>
-                                <div class="peer"><span class="c-grey-900 fsz-lg fw-600">{{ number_format($totalReqs) }}</span></div>
+                                <div class="peer"><span class="c-grey-900 fsz-lg fw-600">{{ number_format($totalReqs) }} <span class="fsz-sm c-grey-500 fw-400">件</span></span></div>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-3">
                     <div class="layers bd bgc-white p-20">
-                        <div class="layer w-100 mB-10"><h6 class="lh-1">配信 MB</h6></div>
+                        <div class="layer w-100 mB-10"><h6 class="lh-1">圧縮後転送量</h6></div>
                         <div class="layer w-100">
                             <div class="peers ai-sb fxw-nw">
                                 <div class="peer peer-greed">
                                     <span class="d-ib lh-0 va-m fw-600 bdrs-10em pX-15 pY-15 bgc-purple-50 c-purple-500"><i class="ti-cloud-up"></i></span>
                                 </div>
-                                <div class="peer"><span class="c-grey-900 fsz-lg fw-600">{{ number_format($outBytes / 1024 / 1024, 2) }}</span></div>
+                                <div class="peer"><span class="c-grey-900 fsz-lg fw-600">{{ number_format($outBytes / 1024 / 1024, 2) }} <span class="fsz-sm c-grey-500 fw-400">MB</span></span></div>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-3">
                     <div class="layers bd bgc-white p-20">
-                        <div class="layer w-100 mB-10"><h6 class="lh-1">Origin MB</h6></div>
+                        <div class="layer w-100 mB-10"><h6 class="lh-1">無圧縮時のサイズ</h6></div>
                         <div class="layer w-100">
                             <div class="peers ai-sb fxw-nw">
                                 <div class="peer peer-greed">
                                     <span class="d-ib lh-0 va-m fw-600 bdrs-10em pX-15 pY-15 bgc-orange-50 c-orange-500"><i class="ti-cloud-down"></i></span>
                                 </div>
-                                <div class="peer"><span class="c-grey-900 fsz-lg fw-600">{{ number_format($inBytes / 1024 / 1024, 2) }}</span></div>
+                                <div class="peer"><span class="c-grey-900 fsz-lg fw-600">{{ number_format($inBytes / 1024 / 1024, 2) }} <span class="fsz-sm c-grey-500 fw-400">MB</span></span></div>
                             </div>
                         </div>
                     </div>
@@ -166,7 +166,7 @@
                 <h4 class="c-grey-900 mB-20"><i class="ti-layout-list-post mR-10 c-grey-500"></i>日別詳細</h4>
                 <div class="table-responsive">
                     <table class="table table-sm">
-                        <thead><tr><th>日付</th><th class="text-end">req</th><th class="text-end">配信 MB</th><th class="text-end">origin MB</th><th class="text-end">圧縮率</th></tr></thead>
+                        <thead><tr><th>日付</th><th class="text-end">リクエスト</th><th class="text-end">圧縮後</th><th class="text-end">無圧縮</th><th class="text-end">圧縮率</th></tr></thead>
                         <tbody>
                             @foreach ($byDay as $row)
                                 @php
@@ -176,9 +176,9 @@
                                 @endphp
                                 <tr>
                                     <td><code>{{ $row['day'] }}</code></td>
-                                    <td class="text-end">{{ number_format((int) $row['reqs']) }}</td>
-                                    <td class="text-end">{{ number_format($dOut / 1024 / 1024, 2) }}</td>
-                                    <td class="text-end">{{ number_format($dIn / 1024 / 1024, 2) }}</td>
+                                    <td class="text-end">{{ number_format((int) $row['reqs']) }} 件</td>
+                                    <td class="text-end">{{ number_format($dOut / 1024 / 1024, 2) }} MB</td>
+                                    <td class="text-end">{{ number_format($dIn / 1024 / 1024, 2) }} MB</td>
                                     <td class="text-end c-green-500 fw-600">{{ $dRatio !== null ? number_format($dRatio, 1).'%' : '—' }}</td>
                                 </tr>
                             @endforeach
@@ -195,7 +195,7 @@
                     <div class="bgc-white bd bdrs-3 p-20 mB-20">
                         <h4 class="c-grey-900 mB-20"><i class="ti-file mR-10 c-grey-500"></i>フォーマット別</h4>
                         <table class="table table-sm">
-                            <thead><tr><th>format</th><th class="text-end">req</th><th class="text-end">origin</th><th class="text-end">配信</th><th class="text-end">圧縮</th></tr></thead>
+                            <thead><tr><th>形式</th><th class="text-end">リクエスト</th><th class="text-end">無圧縮</th><th class="text-end">圧縮後</th><th class="text-end">圧縮率</th></tr></thead>
                             <tbody>
                                 @foreach ($byFormat as $row)
                                     @php $rIn = (float)($row['input_bytes'] ?? 0); $rOut = (float)($row['output_bytes'] ?? 0); $rRatio = $rIn > 0 ? ($rOut/$rIn)*100 : null; @endphp
@@ -285,7 +285,7 @@
                         labels,
                         datasets: [
                             {
-                                label: 'origin MB',
+                                label: '無圧縮 MB',
                                 data: inMb,
                                 borderColor: '#f97316',
                                 backgroundColor: 'rgba(249, 115, 22, 0.1)',
@@ -295,7 +295,7 @@
                                 pointBackgroundColor: '#f97316',
                             },
                             {
-                                label: '配信 MB',
+                                label: '圧縮後 MB',
                                 data: outMb,
                                 borderColor: '#3b82f6',
                                 backgroundColor: 'rgba(59, 130, 246, 0.1)',

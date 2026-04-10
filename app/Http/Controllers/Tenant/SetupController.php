@@ -34,45 +34,68 @@ class SetupController extends Controller
      * packto 有効チェック — 顧客サブドメインに HTTP リクエストを投げて
      * x-imagy-version ヘッダの有無で CDN 経由を確認する。
      */
+    /**
+     * packto 動作確認 — ユーザが入力した URL をサーバ側から取得して
+     * packto CDN (subdomain.packto.jp) 経由になっているか確認する。
+     *
+     * 手順:
+     * 1. 入力 URL を fetch → リダイレクト先が *.packto.jp かチェック
+     * 2. リダイレクト先 (or 直接) に x-imagy-version ヘッダがあれば OK
+     */
     public function check(Request $request): JsonResponse
     {
         $customer = $request->user()->customer;
         if (! $customer) {
-            return response()->json(['ok' => false, 'error' => '顧客情報が紐付いていません']);
+            return response()->json(['ok' => false, 'message' => '顧客情報が紐付いていません']);
         }
 
-        $testUrl = "https://{$customer->subdomain}.packto.jp/favicon.ico";
+        $data = $request->validate(['url' => ['required', 'url']]);
+        $inputUrl = $data['url'];
 
         try {
-            $response = Http::timeout(10)->withHeaders([
-                'User-Agent' => 'Packto-StatusCheck/1.0',
-            ])->get($testUrl);
+            // まず origin URL を叩いてリダイレクトを確認 (follow しない)
+            $originResp = Http::timeout(10)
+                ->withHeaders(['User-Agent' => 'Packto-StatusCheck/1.0'])
+                ->withOptions(['allow_redirects' => false])
+                ->get($inputUrl);
 
-            $version = $response->header('x-imagy-version');
-            $status = $response->status();
+            $location = $originResp->header('location');
+            $isRedirected = $originResp->isRedirect() && $location && str_contains($location, '.packto.jp');
+
+            if (! $isRedirected) {
+                return response()->json([
+                    'ok' => false,
+                    'message' => "このURL は packto.jp へリダイレクトされていません (HTTP {$originResp->status()})。.htaccess が正しく設定されているか確認してください。",
+                ]);
+            }
+
+            // packto.jp 経由の URL を叩いてヘッダ確認
+            $packtoResp = Http::timeout(10)
+                ->withHeaders(['User-Agent' => 'Packto-StatusCheck/1.0'])
+                ->get($location);
+
+            $version = $packtoResp->header('x-imagy-version');
+            $history = $packtoResp->header('x-imagy-process-history');
 
             if ($version) {
                 return response()->json([
                     'ok' => true,
-                    'status' => $status,
-                    'version' => $version,
-                    'message' => "packto CDN は正常に動作しています (worker: {$version})",
+                    'message' => "packto CDN 経由で配信されています。\nリダイレクト先: {$location}\nworker: {$version}" . ($history ? "\n処理: {$history}" : ''),
                 ]);
             }
 
             return response()->json([
                 'ok' => false,
-                'status' => $status,
-                'message' => 'x-imagy-version ヘッダが見つかりません。.htaccess の設定を確認してください。',
+                'message' => "リダイレクトは確認できましたが、x-imagy-version ヘッダがありません。\nリダイレクト先: {$location}\nworker が応答していない可能性があります。",
             ]);
         } catch (\Throwable $e) {
             Log::warning('Packto status check failed', [
-                'subdomain' => $customer->subdomain,
+                'url' => $inputUrl,
                 'error' => $e->getMessage(),
             ]);
             return response()->json([
                 'ok' => false,
-                'message' => '接続エラー: '.class_basename($e).' — DNS やドメイン設定を確認してください。',
+                'message' => '接続エラー: '.class_basename($e).' — URL が正しいか確認してください。',
             ]);
         }
     }

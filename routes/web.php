@@ -68,6 +68,7 @@ Route::middleware(['web', 'auth'])->group(function () {
 */
 Route::middleware(['web', 'auth'])->group(function () {
     Route::get('/account', [AccountController::class, 'edit'])->name('account.edit');
+    Route::patch('/account/email', [AccountController::class, 'updateEmail'])->name('account.email.update');
     Route::patch('/account/password', [AccountController::class, 'updatePassword'])->name('account.password.update');
 });
 

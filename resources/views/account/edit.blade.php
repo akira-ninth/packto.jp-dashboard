@@ -5,17 +5,37 @@
 @section('content')
     <h4 class="c-grey-900 mT-10 mB-30">アカウント設定</h4>
 
+    @if (session('status'))
+        <div class="alert alert-success mB-20">{{ session('status') }}</div>
+    @endif
+
     {{-- Basic info --}}
     <div class="bgc-white bd bdrs-3 p-20 mB-20">
         <h4 class="c-grey-900 mB-20"><i class="ti-user mR-10 c-grey-500"></i>基本情報</h4>
         <table class="table">
             <tr><th style="width: 140px;">名前</th><td>{{ auth()->user()->name }}</td></tr>
             <tr><th>メール</th><td>{{ auth()->user()->email }}</td></tr>
-            <tr><th>ロール</th><td><span class="badge bg-secondary">{{ auth()->user()->role }}</span></td></tr>
-            @if (auth()->user()->customer)
-                <tr><th>顧客</th><td>{{ auth()->user()->customer->display_name }} ({{ auth()->user()->customer->subdomain }})</td></tr>
-            @endif
         </table>
+    </div>
+
+    {{-- Email change --}}
+    <div class="bgc-white bd bdrs-3 p-20 mB-20">
+        <h4 class="c-grey-900 mB-20"><i class="ti-email mR-10 c-grey-500"></i>メールアドレス変更</h4>
+        <form method="POST" action="{{ route('account.email.update') }}" style="max-width: 400px;">
+            @csrf
+            @method('PATCH')
+            <div class="mB-20">
+                <label class="form-label">新しいメールアドレス</label>
+                <input type="email" name="email" value="{{ old('email', auth()->user()->email) }}" class="form-control @error('email') is-invalid @enderror" required>
+                @error('email')<div class="invalid-feedback">{{ $message }}</div>@enderror
+            </div>
+            <div class="mB-20">
+                <label class="form-label">現在のパスワード (確認)</label>
+                <input type="password" name="current_password" class="form-control @error('current_password') is-invalid @enderror" required>
+                @error('current_password')<div class="invalid-feedback">{{ $message }}</div>@enderror
+            </div>
+            <button type="submit" class="btn btn-primary">メールアドレスを変更</button>
+        </form>
     </div>
 
     {{-- 2FA section --}}
