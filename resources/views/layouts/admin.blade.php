@@ -13,35 +13,69 @@
         .badge-active { background: #dcfce7; color: #166534; }
         .badge-inactive { background: #fee2e2; color: #991b1b; }
 
-        /* === Master 専用: ダークサイドバー === */
-        .sidebar { background: #1a1d21 !important; }
+        /* === Master 専用: ダークサイドバー ===
+         * Adminator は CSS 変数 + color-mix + :root prefix で !important を多用するため
+         * sidebar スコープで変数を上書きし、さらに :root 付き selector で個別 override する。
+         */
+        .sidebar {
+            --c-bkg-body: #1a1d21;
+            --c-bkg-card: #1a1d21;
+            --c-bkg-sidebar: #1a1d21;
+            --c-bkg-hover: #2d3139;
+            --c-text-base: #cbd5e1;
+            --c-text-muted: #64748b;
+            --c-border: #2d3139;
+            --c-border-light: #252830;
+            --c-icon: #94a3b8;
+            --c-icon-hover: #fff;
+            --c-icon-active: #a5b4fc;
+            --c-primary: #818cf8;
+            --c-primary-light: #a5b4fc;
+            background: #1a1d21 !important;
+        }
         .sidebar .sidebar-inner { background: #1a1d21 !important; }
-        .sidebar .sidebar-logo { border-bottom: 1px solid rgba(255,255,255,.08); }
+        .sidebar .sidebar-logo { border-bottom: 1px solid rgba(255,255,255,.08) !important; }
         .sidebar .logo-text { color: #fff !important; }
 
-        /* ナビリンク通常時 */
-        .sidebar .sidebar-link { color: #a0aec0 !important; }
-        .sidebar .sidebar-link .title { color: #a0aec0 !important; }
-        .sidebar .sidebar-link .icon-holder > i { opacity: .7; }
+        /* 通常リンク */
+        .sidebar .sidebar-menu li a,
+        .sidebar .sidebar-menu li a .title { color: #a0aec0 !important; }
 
-        /* hover/focus: ダーク背景のまま、テキストを白に */
-        .sidebar .sidebar-link:hover,
-        .sidebar .sidebar-link:focus { background: #2d3139 !important; color: #fff !important; }
-        .sidebar .sidebar-link:hover .title,
-        .sidebar .sidebar-link:focus .title { color: #fff !important; }
-        .sidebar .sidebar-link:hover .icon-holder > i,
-        .sidebar .sidebar-link:focus .icon-holder > i { color: #fff !important; opacity: 1; }
+        /* hover: ダーク背景で白テキスト */
+        .sidebar .sidebar-menu li a:hover,
+        .sidebar .sidebar-menu li a:focus,
+        :root .sidebar .sidebar-menu li a:hover,
+        :root .sidebar .sidebar-menu li a:focus { background-color: #2d3139 !important; color: #fff !important; }
+        .sidebar .sidebar-menu li a:hover .title,
+        .sidebar .sidebar-menu li a:focus .title { color: #fff !important; }
+        .sidebar .sidebar-menu li a:hover .icon-holder,
+        .sidebar .sidebar-menu li a:focus .icon-holder { color: #fff !important; }
 
-        /* active state */
-        .sidebar .nav-item .sidebar-link { border-left: 3px solid transparent; }
-        .sidebar .nav-item.actived .sidebar-link { background: rgba(99,102,241,.2) !important; border-left: 3px solid #818cf8; }
-        .sidebar .nav-item.actived .sidebar-link .title { color: #fff !important; font-weight: 600; }
-        .sidebar .nav-item.actived .sidebar-link .icon-holder > i { opacity: 1; color: #a5b4fc !important; }
+        /* active: Adminator の :root .sidebar selector を完全 override */
+        :root .sidebar .sidebar-menu li.actived > a,
+        .sidebar .sidebar-menu li.actived > a {
+            background-color: rgba(99,102,241,.2) !important;
+            color: #fff !important;
+            border-left: 3px solid #818cf8 !important;
+            margin-left: -3px;
+        }
+        :root .sidebar .sidebar-menu li.actived > a .title { color: #fff !important; font-weight: 600; }
+        :root .sidebar .sidebar-menu li.actived > a .icon-holder,
+        .sidebar .sidebar-menu li.actived > a .icon-holder {
+            color: #a5b4fc !important;
+            background-color: rgba(99,102,241,.15) !important;
+        }
+        .sidebar .nav-item.actived::before { background: #818cf8 !important; }
 
-        /* dropdown-menu もダーク (ユーザメニュー等がサイドバー上にある場合) */
-        .sidebar .dropdown-menu { background: #2d3139; border-color: #3d4249; }
+        /* dropdown */
+        .sidebar .dropdown-menu { background: #2d3139 !important; border-color: #3d4249 !important; }
         .sidebar .dropdown-menu a { color: #cbd5e1 !important; }
         .sidebar .dropdown-menu a:hover { background: #3d4249 !important; color: #fff !important; }
+        :root .sidebar .sidebar-menu > li.dropdown ul.dropdown-menu > li > a:hover,
+        :root .sidebar .sidebar-menu > li.dropdown ul.dropdown-menu > li.actived a {
+            background-color: #3d4249 !important;
+            color: #fff !important;
+        }
     </style>
     @yield('head')
 </head>
