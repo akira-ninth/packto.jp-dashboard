@@ -16,7 +16,7 @@
                 <p style="margin: 0 0 16px;">{{ $name }} 様</p>
 
                 <p style="margin: 0 0 16px; line-height: 1.7;">
-                    Packto Console のアカウントが作成されました。<br>
+                    Packtoのアカウントが作成されました。<br>
                     下記の情報でログインし、初回ログイン後に必ずパスワードを変更してください。
                 </p>
 
@@ -32,10 +32,6 @@
                     <tr>
                         <td style="border-bottom: 1px solid #e5e7eb; color: #6b7280; font-size: 13px;">初期パスワード</td>
                         <td style="border-bottom: 1px solid #e5e7eb;"><code style="background: #fef3c7; padding: 4px 8px; border-radius: 4px; font-size: 14px; font-weight: 600;">{{ $tempPassword }}</code></td>
-                    </tr>
-                    <tr>
-                        <td style="color: #6b7280; font-size: 13px;">アカウント種別</td>
-                        <td style="font-size: 13px;">{{ $role === 'master' ? 'マスター (統合管理画面)' : '顧客 (ダッシュボード)' }}</td>
                     </tr>
                 </table>
 
