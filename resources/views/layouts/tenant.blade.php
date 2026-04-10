@@ -8,6 +8,8 @@
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
     <link href="/adminator/style.css" rel="stylesheet">
     <style>
+        .sidebar .sidebar-logo .logo { display: flex !important; align-items: center !important; width: auto !important; min-height: auto !important; }
+        .sidebar .sidebar-logo .logo img { display: inline-block !important; margin: 0 !important; height: 30px !important; width: 30px !important; }
         .badge-plan-basic { background: #e2e8f0; color: #475569; }
         .badge-plan-pro { background: #ede9fe; color: #6d28d9; }
         .badge-active { background: #dcfce7; color: #166534; }

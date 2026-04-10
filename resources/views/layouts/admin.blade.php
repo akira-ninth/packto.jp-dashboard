@@ -35,6 +35,8 @@
         }
         .sidebar .sidebar-inner { background: #1a1d21 !important; }
         .sidebar .sidebar-logo { border-bottom: 1px solid rgba(255,255,255,.08) !important; }
+        .sidebar .sidebar-logo .logo { display: flex !important; align-items: center !important; width: auto !important; min-height: auto !important; }
+        .sidebar .sidebar-logo .logo img { display: inline-block !important; margin: 0 !important; height: 30px !important; width: 30px !important; }
         .sidebar .logo-text { color: #fff !important; }
 
         /* 通常リンク */
