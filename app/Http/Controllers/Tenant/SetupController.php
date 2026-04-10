@@ -80,12 +80,13 @@ class SetupController extends Controller
                 ->get($inputUrl);
 
             $location = $originResp->header('location');
-            $isRedirected = $originResp->isRedirect() && $location && str_contains($location, '.packto.jp');
+            $statusCode = $originResp->status();
+            $isRedirected = in_array($statusCode, [301, 302, 303, 307, 308], true) && $location && str_contains($location, '.packto.jp');
 
             if (! $isRedirected) {
                 return response()->json([
                     'ok' => false,
-                    'message' => "このURL は packto.jp へリダイレクトされていません (HTTP {$originResp->status()})。.htaccess が正しく設定されているか確認してください。",
+                    'message' => "このURL は packto.jp へリダイレクトされていません (HTTP {$statusCode})。.htaccess / Nginx の設定が正しいか確認してください。",
                 ]);
             }
 
