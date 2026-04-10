@@ -18,14 +18,30 @@
         .sidebar .sidebar-inner { background: #1a1d21 !important; }
         .sidebar .sidebar-logo { border-bottom: 1px solid rgba(255,255,255,.08); }
         .sidebar .logo-text { color: #fff !important; }
-        .sidebar .sidebar-link .title { color: #a0aec0; }
-        .sidebar .sidebar-link:hover .title,
-        .sidebar .sidebar-link:hover .icon-holder > i { color: #fff; }
-        .sidebar .nav-item.actived .sidebar-link .title { color: #fff; font-weight: 600; }
-        .sidebar .nav-item.actived .sidebar-link { background: rgba(99,102,241,.15); border-left: 3px solid #6366f1; }
-        .sidebar .nav-item .sidebar-link { border-left: 3px solid transparent; }
+
+        /* ナビリンク通常時 */
+        .sidebar .sidebar-link { color: #a0aec0 !important; }
+        .sidebar .sidebar-link .title { color: #a0aec0 !important; }
         .sidebar .sidebar-link .icon-holder > i { opacity: .7; }
-        .sidebar .nav-item.actived .sidebar-link .icon-holder > i { opacity: 1; color: #818cf8 !important; }
+
+        /* hover/focus: ダーク背景のまま、テキストを白に */
+        .sidebar .sidebar-link:hover,
+        .sidebar .sidebar-link:focus { background: #2d3139 !important; color: #fff !important; }
+        .sidebar .sidebar-link:hover .title,
+        .sidebar .sidebar-link:focus .title { color: #fff !important; }
+        .sidebar .sidebar-link:hover .icon-holder > i,
+        .sidebar .sidebar-link:focus .icon-holder > i { color: #fff !important; opacity: 1; }
+
+        /* active state */
+        .sidebar .nav-item .sidebar-link { border-left: 3px solid transparent; }
+        .sidebar .nav-item.actived .sidebar-link { background: rgba(99,102,241,.2) !important; border-left: 3px solid #818cf8; }
+        .sidebar .nav-item.actived .sidebar-link .title { color: #fff !important; font-weight: 600; }
+        .sidebar .nav-item.actived .sidebar-link .icon-holder > i { opacity: 1; color: #a5b4fc !important; }
+
+        /* dropdown-menu もダーク (ユーザメニュー等がサイドバー上にある場合) */
+        .sidebar .dropdown-menu { background: #2d3139; border-color: #3d4249; }
+        .sidebar .dropdown-menu a { color: #cbd5e1 !important; }
+        .sidebar .dropdown-menu a:hover { background: #3d4249 !important; color: #fff !important; }
     </style>
     @yield('head')
 </head>
