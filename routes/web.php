@@ -97,6 +97,9 @@ Route::domain($adminDomain)
 
         // Phase 13l: 監査ログ閲覧
         Route::get('audit-logs', [AdminAuditLogController::class, 'index'])->name('audit-logs.index');
+
+        // ユニークチェック API (AJAX)
+        Route::post('customers/check-unique', [AdminCustomerController::class, 'checkUnique'])->name('customers.check-unique');
     });
 
 /*

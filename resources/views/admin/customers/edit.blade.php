@@ -32,7 +32,7 @@
             </div>
 
             <div class="mB-20">
-                <label class="form-label">Origin URL</label>
+                <label class="form-label">対象URL</label>
                 <input type="url" name="origin_url" value="{{ old('origin_url', $customer->origin_url) }}" class="form-control" required>
                 @error('origin_url')<div class="c-red-500 mT-5 fsz-sm">{{ $message }}</div>@enderror
             </div>

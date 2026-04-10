@@ -38,11 +38,11 @@
                     @endphp
                     <tr>
                         <td style="white-space: nowrap;">
-                            <a href="{{ route('admin.customers.show', $customer) }}" class="btn btn-sm" style="background:#e9ecef;color:#495057;border:1px solid #ced4da;" title="詳細">
-                                <i class="fa fa-eye"></i>
+                            <a href="{{ route('admin.customers.show', $customer) }}" class="btn btn-sm" style="background:#e9ecef;color:#495057;border:1px solid #ced4da;">
+                                <i class="fa fa-folder-open mR-3"></i>詳細
                             </a>
-                            <a href="{{ route('admin.customers.edit', $customer) }}" class="btn btn-sm mL-5" style="background:#e9ecef;color:#495057;border:1px solid #ced4da;" title="編集">
-                                <i class="fa fa-pencil"></i>
+                            <a href="{{ route('admin.customers.edit', $customer) }}" class="btn btn-sm mL-5" style="background:#e9ecef;color:#495057;border:1px solid #ced4da;">
+                                <i class="fa fa-pencil mR-3"></i>編集
                             </a>
                         </td>
                         <td><a href="{{ route('admin.customers.show', $customer) }}" class="c-grey-900 fw-600 td-n">{{ $customer->display_name }}</a></td>

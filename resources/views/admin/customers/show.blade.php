@@ -47,7 +47,7 @@
         <h4 class="c-grey-900 mB-20"><i class="ti-home mR-10 c-grey-500"></i>顧客情報</h4>
         <table class="table">
             <tr><th style="width: 180px;">ワーカードメイン</th><td><code>{{ $customer->subdomain }}.packto.jp</code></td></tr>
-            <tr><th>Origin URL</th><td><a href="{{ $customer->origin_url }}" target="_blank" rel="noopener">{{ $customer->origin_url }}</a></td></tr>
+            <tr><th>対象URL</th><td><a href="{{ $customer->origin_url }}" target="_blank" rel="noopener">{{ $customer->origin_url }}</a></td></tr>
             <tr><th>プラン</th><td><span class="badge badge-plan-{{ $customer->plan->slug }}">{{ $customer->plan->name }}</span></td></tr>
             <tr><th>状態</th><td>
                 @if ($customer->active)

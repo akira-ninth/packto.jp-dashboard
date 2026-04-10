@@ -101,6 +101,27 @@ class CustomerController extends Controller
         return redirect()->route('admin.customers.index')->with('status', 'created');
     }
 
+    /**
+     * AJAX: subdomain / display_name のユニークチェック
+     */
+    public function checkUnique(Request $request): \Illuminate\Http\JsonResponse
+    {
+        $field = $request->input('field'); // 'subdomain' or 'display_name'
+        $value = $request->input('value', '');
+        $exclude = $request->input('exclude'); // 編集時に自分自身を除外
+
+        if (! in_array($field, ['subdomain', 'display_name'], true) || $value === '') {
+            return response()->json(['available' => false]);
+        }
+
+        $query = Customer::where($field, $value);
+        if ($exclude) {
+            $query->where('id', '!=', $exclude);
+        }
+
+        return response()->json(['available' => ! $query->exists()]);
+    }
+
     private const ALLOWED_PERIODS = [7, 30, 90];
 
     public function show(Request $request, Customer $customer): View
