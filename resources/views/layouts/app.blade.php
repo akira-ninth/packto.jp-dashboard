@@ -45,10 +45,12 @@
 <div class="peers ai-s fxw-nw h-100vh">
     {{-- Left panel --}}
     <div class="d-n@sm- peer peer-greed h-100 pos-r auth-left">
-        <div class="pos-a centerXY">
-            <div class="{{ $isAdmin ? 'bgc-grey-900' : 'bgc-white' }} bdrs-50p pos-r" style="width: 120px; height: 120px; {{ $isAdmin ? 'border: 2px solid #2d3139;' : '' }}">
+        <div class="pos-a centerXY" style="text-align: center;">
+            <div class="{{ $isAdmin ? 'bgc-grey-900' : 'bgc-white' }} bdrs-50p pos-r" style="width: 120px; height: 120px; margin: 0 auto 1.5rem; {{ $isAdmin ? 'border: 2px solid #2d3139;' : '' }}">
                 <img class="pos-a centerXY" src="/adminator/logo.svg" alt="" style="max-width: 60px; {{ $isAdmin ? 'filter: invert(1);' : '' }}">
             </div>
+            <h2 style="color: {{ $isAdmin ? '#e2e8f0' : '#fff' }}; font-size: 1.75rem; font-weight: 700; margin: 0 0 .5rem; letter-spacing: .02em;">Packto</h2>
+            <p style="color: {{ $isAdmin ? '#64748b' : 'rgba(255,255,255,.7)' }}; font-size: .875rem; margin: 0;">超高速Web配信サービス</p>
         </div>
     </div>
 
