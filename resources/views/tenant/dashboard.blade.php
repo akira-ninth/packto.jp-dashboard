@@ -7,46 +7,52 @@
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h1 class="h4 mb-0 fw-bold">{{ $customer->display_name }}</h1>
             @if ($customer->active)
-                <span class="badge badge-active"><i class="bi bi-check-circle me-1"></i>配信中</span>
+                <span class="badge badge-active"><i class="fa fa-check-circle me-1"></i>配信中</span>
             @else
-                <span class="badge badge-inactive"><i class="bi bi-x-circle me-1"></i>停止中</span>
+                <span class="badge badge-inactive"><i class="fa fa-times-circle me-1"></i>停止中</span>
             @endif
         </div>
 
         {{-- Info tiles --}}
         <div class="row g-3 mb-4">
             <div class="col-md-4">
-                <div class="stat-tile">
-                    <div class="d-flex align-items-center">
-                        <div class="stat-icon bg-primary me-3"><i class="bi bi-globe2"></i></div>
+                <a class="block block-rounded block-link-shadow" href="javascript:void(0)">
+                    <div class="block-content block-content-full d-flex align-items-center">
+                        <div class="me-3">
+                            <i class="fa fa-globe fa-2x opacity-25 text-primary"></i>
+                        </div>
                         <div>
-                            <div class="stat-value" style="font-size: 16px;">{{ $customer->subdomain }}.packto.jp</div>
-                            <div class="stat-label">配信ドメイン</div>
+                            <div class="fw-semibold" style="font-size: 1rem;">{{ $customer->subdomain }}.packto.jp</div>
+                            <div class="fs-sm fw-semibold text-uppercase text-muted">配信ドメイン</div>
                         </div>
                     </div>
-                </div>
+                </a>
             </div>
             <div class="col-md-4">
-                <div class="stat-tile">
-                    <div class="d-flex align-items-center">
-                        <div class="stat-icon bg-secondary me-3"><i class="bi bi-link-45deg"></i></div>
+                <a class="block block-rounded block-link-shadow" href="javascript:void(0)">
+                    <div class="block-content block-content-full d-flex align-items-center">
+                        <div class="me-3">
+                            <i class="fa fa-link fa-2x opacity-25 text-secondary"></i>
+                        </div>
                         <div>
-                            <div class="stat-value" style="font-size: 14px;">{{ $customer->origin_url }}</div>
-                            <div class="stat-label">Origin</div>
+                            <div class="fw-semibold fs-sm">{{ $customer->origin_url }}</div>
+                            <div class="fs-sm fw-semibold text-uppercase text-muted">Origin</div>
                         </div>
                     </div>
-                </div>
+                </a>
             </div>
             <div class="col-md-4">
-                <div class="stat-tile">
-                    <div class="d-flex align-items-center">
-                        <div class="stat-icon" style="background:#6d28d9;" class="me-3"><i class="bi bi-stars"></i></div>
+                <a class="block block-rounded block-link-shadow" href="javascript:void(0)">
+                    <div class="block-content block-content-full d-flex align-items-center">
+                        <div class="me-3">
+                            <i class="fa fa-star fa-2x opacity-25" style="color: #6d28d9;"></i>
+                        </div>
                         <div>
-                            <div class="stat-value" style="font-size: 18px;">{{ $customer->plan->name }}</div>
-                            <div class="stat-label">プラン</div>
+                            <div class="fw-semibold" style="font-size: 1.125rem;">{{ $customer->plan->name }}</div>
+                            <div class="fs-sm fw-semibold text-uppercase text-muted">プラン</div>
                         </div>
                     </div>
-                </div>
+                </a>
             </div>
         </div>
 
@@ -62,47 +68,57 @@
         @if ($totalReqs > 0)
             <div class="row g-3 mb-4">
                 <div class="col-6 col-lg-3">
-                    <div class="stat-tile text-center">
-                        <div class="stat-value">{{ number_format($totalReqs) }}</div>
-                        <div class="stat-label">リクエスト数</div>
-                    </div>
+                    <a class="block block-rounded block-link-shadow text-center" href="javascript:void(0)">
+                        <div class="block-content block-content-full">
+                            <div class="fs-3 fw-semibold">{{ number_format($totalReqs) }}</div>
+                            <div class="fs-sm fw-semibold text-uppercase text-muted">リクエスト数</div>
+                        </div>
+                    </a>
                 </div>
                 <div class="col-6 col-lg-3">
-                    <div class="stat-tile text-center">
-                        <div class="stat-value">{{ number_format($outBytes / 1024 / 1024, 2) }}</div>
-                        <div class="stat-label">配信 MB</div>
-                    </div>
+                    <a class="block block-rounded block-link-shadow text-center" href="javascript:void(0)">
+                        <div class="block-content block-content-full">
+                            <div class="fs-3 fw-semibold">{{ number_format($outBytes / 1024 / 1024, 2) }}</div>
+                            <div class="fs-sm fw-semibold text-uppercase text-muted">配信 MB</div>
+                        </div>
+                    </a>
                 </div>
                 <div class="col-6 col-lg-3">
-                    <div class="stat-tile text-center">
-                        <div class="stat-value">{{ number_format($inBytes / 1024 / 1024, 2) }}</div>
-                        <div class="stat-label">Origin MB</div>
-                    </div>
+                    <a class="block block-rounded block-link-shadow text-center" href="javascript:void(0)">
+                        <div class="block-content block-content-full">
+                            <div class="fs-3 fw-semibold">{{ number_format($inBytes / 1024 / 1024, 2) }}</div>
+                            <div class="fs-sm fw-semibold text-uppercase text-muted">Origin MB</div>
+                        </div>
+                    </a>
                 </div>
                 @if ($ratio !== null)
                     <div class="col-6 col-lg-3">
-                        <div class="stat-tile text-center">
-                            <div class="stat-value text-success">{{ number_format($ratio, 1) }}%</div>
-                            <div class="stat-label">圧縮率</div>
-                        </div>
+                        <a class="block block-rounded block-link-shadow text-center" href="javascript:void(0)">
+                            <div class="block-content block-content-full">
+                                <div class="fs-3 fw-semibold text-success">{{ number_format($ratio, 1) }}%</div>
+                                <div class="fs-sm fw-semibold text-uppercase text-muted">圧縮率</div>
+                            </div>
+                        </a>
                     </div>
                 @endif
             </div>
         @else
             <div class="alert alert-info">
-                <i class="bi bi-info-circle me-1"></i> 直近 7 日のリクエストがありません (Analytics Engine の集計待ちかも)
+                <i class="fa fa-info-circle me-1"></i> 直近 7 日のリクエストがありません (Analytics Engine の集計待ちかも)
             </div>
         @endif
 
         {{-- Daily chart --}}
         @if (! empty($byDay))
-            <div class="card mb-4">
-                <div class="card-header"><i class="bi bi-graph-up me-2"></i> 日別推移 (7 日)</div>
-                <div class="card-body">
+            <div class="block block-rounded">
+                <div class="block-header block-header-default">
+                    <h3 class="block-title"><i class="fa fa-chart-line me-2 opacity-50"></i>日別推移 (7 日)</h3>
+                </div>
+                <div class="block-content">
                     <canvas id="dayChart" height="80"></canvas>
                 </div>
-                <div class="card-body p-0">
-                    <table class="table table-sm table-hover mb-0">
+                <div class="block-content p-0">
+                    <table class="table table-sm table-hover table-vcenter mb-0">
                         <thead><tr><th>日付</th><th class="text-end">req</th><th class="text-end">配信 MB</th><th class="text-end">origin MB</th></tr></thead>
                         <tbody>
                             @foreach ($byDay as $row)
@@ -123,10 +139,12 @@
         <div class="row g-3">
             @if (! empty($byFormat))
                 <div class="col-lg-6">
-                    <div class="card">
-                        <div class="card-header"><i class="bi bi-file-earmark-code me-2"></i> フォーマット別</div>
-                        <div class="card-body p-0">
-                            <table class="table table-sm table-hover mb-0">
+                    <div class="block block-rounded">
+                        <div class="block-header block-header-default">
+                            <h3 class="block-title"><i class="fa fa-file-code me-2 opacity-50"></i>フォーマット別</h3>
+                        </div>
+                        <div class="block-content p-0">
+                            <table class="table table-sm table-hover table-vcenter mb-0">
                                 <thead><tr><th>format</th><th class="text-end">req</th><th class="text-end">origin</th><th class="text-end">配信</th><th class="text-end">圧縮</th></tr></thead>
                                 <tbody>
                                     @foreach ($byFormat as $row)
@@ -148,10 +166,12 @@
 
             @if (! empty($byCache))
                 <div class="col-lg-6">
-                    <div class="card">
-                        <div class="card-header"><i class="bi bi-hdd-stack me-2"></i> キャッシュ状態</div>
-                        <div class="card-body p-0">
-                            <table class="table table-sm table-hover mb-0">
+                    <div class="block block-rounded">
+                        <div class="block-header block-header-default">
+                            <h3 class="block-title"><i class="fa fa-hard-drive me-2 opacity-50"></i>キャッシュ状態</h3>
+                        </div>
+                        <div class="block-content p-0">
+                            <table class="table table-sm table-hover table-vcenter mb-0">
                                 <thead><tr><th>cache_status</th><th class="text-end">req</th></tr></thead>
                                 <tbody>
                                     @foreach ($byCache as $row)
@@ -169,7 +189,7 @@
         </div>
     @else
         <div class="alert alert-warning">
-            <i class="bi bi-exclamation-triangle me-1"></i> 顧客情報が紐付いていません。マスターアカウント (admin) にお問い合わせください。
+            <i class="fa fa-triangle-exclamation me-1"></i> 顧客情報が紐付いていません。マスターアカウント (admin) にお問い合わせください。
         </div>
     @endif
 @endsection

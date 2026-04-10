@@ -3,40 +3,44 @@
 @section('title', 'マスター管理 | Packto Console')
 
 @section('content')
-    <h1 class="h3 mb-4">マスターアカウント</h1>
+    <h1 class="h4 fw-bold mb-4">マスターアカウント</h1>
 
     @if (session('temp_credentials'))
         @php $mailSent = session('temp_credentials.mail_sent'); @endphp
-        <div class="alert alert-warning">
-            <h5 class="alert-heading mb-2"><i class="bi bi-exclamation-triangle"></i> 初期ログイン情報 (この画面でのみ表示されます)</h5>
-            @if ($mailSent === true)
-                <div class="alert alert-success py-2 mb-2" style="font-size: 13px;">
-                    <i class="bi bi-check-circle"></i> 招待メールを <code>{{ session('temp_credentials.email') }}</code> に送信しました。
-                </div>
-            @elseif ($mailSent === false)
-                <div class="alert alert-danger py-2 mb-2" style="font-size: 13px;">
-                    <i class="bi bi-exclamation-triangle"></i> メール送信に失敗しました。下記の情報を手動で控えてください。
-                </div>
-            @endif
-            <p class="mb-2" style="font-size: 13px;">
-                次にこのページをリロードすると消えます。
-                追加されたマスターは初回ログイン後に <code>/account</code> でパスワードを変更してください。
-            </p>
-            <table class="table table-sm table-borderless mb-0" style="max-width: 500px;">
-                <tr><th style="width: 140px;">ログイン URL</th><td><code>https://admin.packto.jp/login</code></td></tr>
-                <tr><th>メール</th><td><code>{{ session('temp_credentials.email') }}</code></td></tr>
-                <tr><th>パスワード</th><td><code class="bg-white px-2 py-1 rounded" style="font-size: 14px;">{{ session('temp_credentials.password') }}</code></td></tr>
-            </table>
+        <div class="block block-rounded" style="border-left: 4px solid #f59e0b;">
+            <div class="block-header block-header-default" style="background: #fffbeb;">
+                <h3 class="block-title"><i class="fa fa-triangle-exclamation text-warning me-1"></i> 初期ログイン情報 (この画面でのみ表示されます)</h3>
+            </div>
+            <div class="block-content" style="background: #fffbeb;">
+                @if ($mailSent === true)
+                    <div class="alert alert-success py-2 mb-3 fs-sm">
+                        <i class="fa fa-check-circle me-1"></i> 招待メールを <code>{{ session('temp_credentials.email') }}</code> に送信しました。
+                    </div>
+                @elseif ($mailSent === false)
+                    <div class="alert alert-danger py-2 mb-3 fs-sm">
+                        <i class="fa fa-triangle-exclamation me-1"></i> メール送信に失敗しました。下記の情報を手動で控えてください。
+                    </div>
+                @endif
+                <p class="mb-3 fs-sm text-muted">
+                    次にこのページをリロードすると消えます。
+                    追加されたマスターは初回ログイン後に <code>/account</code> でパスワードを変更してください。
+                </p>
+                <table class="table table-sm table-borderless table-vcenter mb-0" style="max-width: 500px;">
+                    <tr><th style="width: 140px;">ログイン URL</th><td><code>https://admin.packto.jp/login</code></td></tr>
+                    <tr><th>メール</th><td><code>{{ session('temp_credentials.email') }}</code></td></tr>
+                    <tr><th>パスワード</th><td><code class="bg-white px-2 py-1 rounded" style="font-size: .875rem;">{{ session('temp_credentials.password') }}</code></td></tr>
+                </table>
+            </div>
         </div>
     @endif
 
     {{-- Master list --}}
-    <div class="card mb-4">
-        <div class="card-header d-flex align-items-center">
-            <i class="bi bi-shield-lock me-2"></i> 登録済みマスター ({{ $masters->count() }})
+    <div class="block block-rounded">
+        <div class="block-header block-header-default">
+            <h3 class="block-title"><i class="fa fa-shield-halved me-2 opacity-50"></i>登録済みマスター ({{ $masters->count() }})</h3>
         </div>
-        <div class="card-body p-0">
-            <table class="table table-hover mb-0">
+        <div class="block-content p-0">
+            <table class="table table-hover table-vcenter mb-0">
                 <thead>
                     <tr><th>名前</th><th>メール</th><th>作成日</th><th class="text-end"></th></tr>
                 </thead>
@@ -51,12 +55,12 @@
                                     <form method="POST" action="{{ route('admin.masters.destroy', $master) }}" class="d-inline" onsubmit="return confirm('本当に {{ $master->email }} を削除しますか?');">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="btn btn-danger btn-sm">
-                                            <i class="bi bi-trash"></i> 削除
+                                        <button type="submit" class="btn btn-sm btn-alt-danger">
+                                            <i class="fa fa-trash me-1"></i> 削除
                                         </button>
                                     </form>
                                 @else
-                                    <span class="text-muted" style="font-size: 12px;">(自分)</span>
+                                    <span class="text-muted" style="font-size: .75rem;">(自分)</span>
                                 @endif
                             </td>
                         </tr>
@@ -67,31 +71,31 @@
     </div>
 
     {{-- Add master form --}}
-    <div class="card">
-        <div class="card-header d-flex align-items-center">
-            <i class="bi bi-person-plus me-2"></i> マスター追加
+    <div class="block block-rounded">
+        <div class="block-header block-header-default">
+            <h3 class="block-title"><i class="fa fa-user-plus me-2 opacity-50"></i>マスター追加</h3>
         </div>
-        <div class="card-body">
+        <div class="block-content">
             <form method="POST" action="{{ route('admin.masters.store') }}">
                 @csrf
                 <div class="row g-3">
                     <div class="col-md-5">
                         <label class="form-label">名前</label>
                         <input type="text" name="name" value="{{ old('name') }}" class="form-control" required>
-                        @error('name')<div class="text-danger mt-1" style="font-size: 13px;">{{ $message }}</div>@enderror
+                        @error('name')<div class="text-danger mt-1 fs-sm">{{ $message }}</div>@enderror
                     </div>
                     <div class="col-md-5">
                         <label class="form-label">メールアドレス</label>
                         <input type="email" name="email" value="{{ old('email') }}" class="form-control" required>
-                        @error('email')<div class="text-danger mt-1" style="font-size: 13px;">{{ $message }}</div>@enderror
+                        @error('email')<div class="text-danger mt-1 fs-sm">{{ $message }}</div>@enderror
                     </div>
                     <div class="col-md-2 d-flex align-items-end">
-                        <button type="submit" class="btn btn-primary w-100">
-                            <i class="bi bi-plus-lg"></i> 追加
+                        <button type="submit" class="btn btn-alt-primary w-100">
+                            <i class="fa fa-plus"></i> 追加
                         </button>
                     </div>
                 </div>
-                <p class="text-muted mt-2 mb-0" style="font-size: 12px;">パスワードは自動生成され、追加完了画面で 1 度だけ表示されます。</p>
+                <p class="text-muted mt-2 mb-0" style="font-size: .75rem;">パスワードは自動生成され、追加完了画面で 1 度だけ表示されます。</p>
             </form>
         </div>
     </div>

@@ -114,7 +114,7 @@ class DomainRoutingTest extends TestCase
         $response = $this->get('/login');
 
         $response->assertOk();
-        $response->assertSee('Packto Console ログイン');
+        $response->assertSee('ようこそ');
         $response->assertSee('メールアドレス');
     }
 

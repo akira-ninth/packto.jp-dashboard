@@ -6,176 +6,435 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'Packto Console')</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
     <style>
+        /* ===== Codebase-style Admin Theme ===== */
+
+        /* --- Font & Body --- */
         :root {
-            --sidebar-width: 250px;
-            --sidebar-bg: #1e293b;
-            --sidebar-hover: #334155;
-            --sidebar-active: #2563eb;
-            --header-height: 56px;
+            --cb-sidebar-width: 250px;
+            --cb-sidebar-bg: #1e293b;
+            --cb-sidebar-text: #b0bec5;
+            --cb-sidebar-active: #3b82f6;
+            --cb-header-height: 60px;
+            --cb-body-bg: #f0f2f5;
+            --cb-primary: #3b82f6;
+            --cb-text: #3e4a59;
+            --cb-text-muted: #6c757d;
+            --cb-block-shadow: 0 2px 6px rgba(0,0,0,.04);
         }
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Hiragino Kaku Gothic ProN", Meiryo, sans-serif; background: #f1f5f9; }
-
-        /* Sidebar */
-        .sidebar {
-            position: fixed; top: 0; left: 0; bottom: 0;
-            width: var(--sidebar-width); background: var(--sidebar-bg);
-            z-index: 1030; overflow-y: auto; transition: transform .2s;
-        }
-        .sidebar-brand {
-            height: var(--header-height); display: flex; align-items: center;
-            padding: 0 20px; font-size: 17px; font-weight: 700; color: #fff;
-            border-bottom: 1px solid rgba(255,255,255,.08);
-        }
-        .sidebar-brand i { font-size: 22px; margin-right: 10px; color: #60a5fa; }
-        .sidebar-nav { padding: 12px 0; }
-        .sidebar-heading {
-            padding: 10px 20px 6px; font-size: 11px; font-weight: 700;
-            text-transform: uppercase; letter-spacing: .05em; color: #64748b;
-        }
-        .sidebar-link {
-            display: flex; align-items: center; padding: 9px 20px;
-            color: #cbd5e1; text-decoration: none; font-size: 13.5px; transition: all .15s;
-        }
-        .sidebar-link:hover { background: var(--sidebar-hover); color: #fff; }
-        .sidebar-link.active { background: var(--sidebar-active); color: #fff; }
-        .sidebar-link i { width: 22px; font-size: 16px; margin-right: 10px; text-align: center; }
-
-        /* Header */
-        .main-header {
-            position: fixed; top: 0; left: var(--sidebar-width); right: 0;
-            height: var(--header-height); background: #fff;
-            border-bottom: 1px solid #e2e8f0; z-index: 1020;
-            display: flex; align-items: center; padding: 0 24px;
-        }
-        .main-header .spacer { flex: 1; }
-        .main-header .user-info { font-size: 13px; color: #64748b; }
-        .main-header .user-info strong { color: #1e293b; }
-
-        /* Content */
-        .main-content {
-            margin-left: var(--sidebar-width); margin-top: var(--header-height);
-            padding: 24px;
+        body {
+            font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", "Hiragino Kaku Gothic ProN", Meiryo, sans-serif;
+            background: var(--cb-body-bg);
+            color: var(--cb-text);
+            margin: 0;
+            overflow-x: hidden;
         }
 
-        /* Stat tiles (Codebase inspired) */
-        .stat-tile {
-            background: #fff; border-radius: 8px; padding: 20px;
-            box-shadow: 0 1px 3px rgba(0,0,0,.04); transition: box-shadow .15s;
+        /* --- Page Container --- */
+        #page-container {
+            display: flex;
+            min-height: 100vh;
         }
-        .stat-tile:hover { box-shadow: 0 4px 12px rgba(0,0,0,.08); }
-        .stat-tile .stat-icon {
-            width: 48px; height: 48px; border-radius: 10px;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 22px; color: #fff;
+
+        /* --- Sidebar --- */
+        #sidebar {
+            position: fixed;
+            top: 0; left: 0; bottom: 0;
+            width: var(--cb-sidebar-width);
+            background: var(--cb-sidebar-bg);
+            z-index: 1030;
+            overflow-y: auto;
+            overflow-x: hidden;
+            transition: transform .28s ease;
         }
-        .stat-tile .stat-value { font-size: 28px; font-weight: 700; color: #1e293b; }
-        .stat-tile .stat-label { font-size: 12px; color: #94a3b8; font-weight: 500; text-transform: uppercase; letter-spacing: .03em; }
+        .sidebar-content {
+            display: flex;
+            flex-direction: column;
+            min-height: 100%;
+        }
+        .content-header {
+            display: flex;
+            align-items: center;
+            padding: 0 1rem;
+            min-height: var(--cb-header-height);
+        }
+        #sidebar .content-header {
+            justify-content: center;
+            border-bottom: 1px solid rgba(255,255,255,.06);
+        }
+        .content-side {
+            padding: 1rem 0;
+        }
+        .content-side-full {
+            flex: 1;
+        }
 
-        /* Cards */
-        .card { border: none; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,.04); }
-        .card-header { background: #fff; border-bottom: 1px solid #f1f5f9; font-weight: 600; font-size: 15px; }
+        /* link-fx */
+        .link-fx {
+            text-decoration: none;
+            position: relative;
+        }
+        .link-fx:hover {
+            text-decoration: none;
+        }
 
-        /* Table */
-        .table th { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: .03em; color: #64748b; background: #f8fafc; }
-        .table td { vertical-align: middle; font-size: 13.5px; }
+        /* text-dual (sidebar brand text) */
+        .text-dual {
+            color: #fff;
+        }
 
-        /* Badges */
+        /* --- nav-main --- */
+        .nav-main {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .nav-main-heading {
+            padding: 1.25rem 1.25rem .375rem;
+            font-size: .6875rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: .06em;
+            color: #64748b;
+        }
+        .nav-main-item {
+            margin: 0;
+        }
+        .nav-main-link {
+            display: flex;
+            align-items: center;
+            padding: .5625rem 1.25rem;
+            color: var(--cb-sidebar-text);
+            text-decoration: none;
+            font-size: .875rem;
+            font-weight: 500;
+            transition: background .15s, color .15s;
+            border-left: 3px solid transparent;
+        }
+        .nav-main-link:hover {
+            background: rgba(255,255,255,.05);
+            color: #fff;
+        }
+        .nav-main-link.active {
+            background: rgba(59,130,246,.15);
+            color: #fff;
+            border-left-color: var(--cb-sidebar-active);
+        }
+        .nav-main-link-icon {
+            width: 1.625rem;
+            font-size: 1rem;
+            margin-right: .625rem;
+            text-align: center;
+            opacity: .7;
+            flex-shrink: 0;
+        }
+        .nav-main-link.active .nav-main-link-icon {
+            opacity: 1;
+            color: var(--cb-sidebar-active);
+        }
+        .nav-main-link-name {
+            flex: 1;
+        }
+
+        /* --- Header --- */
+        #page-header {
+            position: fixed;
+            top: 0; left: var(--cb-sidebar-width); right: 0;
+            height: var(--cb-header-height);
+            background: #fff;
+            border-bottom: 1px solid #e5e7eb;
+            z-index: 1020;
+            display: flex;
+            align-items: center;
+        }
+        #page-header .content-header {
+            flex: 1;
+            padding: 0 1.25rem;
+            justify-content: space-between;
+        }
+
+        /* --- Main Content --- */
+        #main-container {
+            margin-left: var(--cb-sidebar-width);
+            margin-top: var(--cb-header-height);
+            min-height: calc(100vh - var(--cb-header-height));
+        }
+        #main-container > .content {
+            padding: 1.5rem;
+            max-width: 1280px;
+        }
+
+        /* --- Block (Card) --- */
+        .block {
+            background: #fff;
+            margin-bottom: 1.5rem;
+            box-shadow: var(--cb-block-shadow);
+        }
+        .block-rounded {
+            border-radius: .5rem;
+        }
+        .block-link-shadow {
+            transition: box-shadow .15s ease-out;
+            text-decoration: none;
+            color: inherit;
+        }
+        .block-link-shadow:hover {
+            box-shadow: 0 6px 18px rgba(0,0,0,.1);
+            color: inherit;
+        }
+        .block-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: .875rem 1.25rem;
+            border-bottom: 1px solid #f0f2f5;
+        }
+        .block-header-default {
+            background: transparent;
+        }
+        .block-title {
+            font-size: .9375rem;
+            font-weight: 600;
+            margin: 0;
+        }
+        .block-content {
+            padding: 1.25rem;
+        }
+        .block-content-full {
+            padding: 1.25rem;
+        }
+        .block-options {
+            display: flex;
+            align-items: center;
+            gap: .5rem;
+        }
+
+        /* --- Buttons (alt variants) --- */
+        .btn-alt-primary {
+            color: #3b82f6;
+            background-color: rgba(59,130,246,.12);
+            border-color: transparent;
+        }
+        .btn-alt-primary:hover, .btn-alt-primary:focus {
+            color: #fff;
+            background-color: #3b82f6;
+            border-color: #3b82f6;
+        }
+        .btn-alt-secondary {
+            color: #6c757d;
+            background-color: rgba(108,117,125,.12);
+            border-color: transparent;
+        }
+        .btn-alt-secondary:hover, .btn-alt-secondary:focus {
+            color: #fff;
+            background-color: #6c757d;
+            border-color: #6c757d;
+        }
+        .btn-alt-danger {
+            color: #e53e3e;
+            background-color: rgba(229,62,62,.12);
+            border-color: transparent;
+        }
+        .btn-alt-danger:hover, .btn-alt-danger:focus {
+            color: #fff;
+            background-color: #e53e3e;
+            border-color: #e53e3e;
+        }
+        .btn-alt-success {
+            color: #059669;
+            background-color: rgba(5,150,105,.12);
+            border-color: transparent;
+        }
+        .btn-alt-success:hover, .btn-alt-success:focus {
+            color: #fff;
+            background-color: #059669;
+            border-color: #059669;
+        }
+
+        /* --- fs-sm (small font) --- */
+        .fs-sm {
+            font-size: .875rem;
+        }
+
+        /* --- Table (Codebase style) --- */
+        .table-vcenter td, .table-vcenter th {
+            vertical-align: middle;
+        }
+        .table thead th {
+            font-size: .75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: .04em;
+            color: #64748b;
+            background: #f8fafc;
+            border-bottom-width: 1px;
+        }
+        .table td {
+            font-size: .8125rem;
+        }
+
+        /* --- Badge plan/status variants --- */
         .badge-plan-basic { background: #e2e8f0; color: #475569; }
         .badge-plan-pro { background: #ede9fe; color: #6d28d9; }
         .badge-active { background: #dcfce7; color: #166534; }
         .badge-inactive { background: #fee2e2; color: #991b1b; }
 
-        /* Mobile sidebar toggle */
-        .sidebar-toggle { display: none; }
-        @media (max-width: 991px) {
-            .sidebar { transform: translateX(-100%); }
-            .sidebar.open { transform: translateX(0); }
-            .main-header { left: 0; }
-            .main-content { margin-left: 0; }
-            .sidebar-toggle { display: inline-flex; }
-            .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.4); z-index: 1025; }
-            .sidebar-overlay.show { display: block; }
+        /* --- Sidebar Page Overlay (mobile) --- */
+        .page-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,.4);
+            z-index: 1025;
+            cursor: pointer;
+        }
+        .page-overlay.show {
+            display: block;
+        }
+
+        /* --- Mobile responsive --- */
+        @media (max-width: 991.98px) {
+            #sidebar {
+                transform: translateX(-100%);
+            }
+            #sidebar.sidebar-o {
+                transform: translateX(0);
+            }
+            #page-header {
+                left: 0;
+            }
+            #main-container {
+                margin-left: 0;
+            }
+            .sidebar-toggle-btn {
+                display: inline-flex !important;
+            }
+        }
+        @media (min-width: 992px) {
+            .sidebar-toggle-btn {
+                display: inline-flex !important;
+            }
         }
     </style>
     @yield('head')
 </head>
 <body>
-    {{-- Sidebar --}}
-    <nav class="sidebar" id="sidebar">
-        <div class="sidebar-brand">
-            <i class="bi bi-box-seam"></i> Packto Console
-        </div>
-        <div class="sidebar-nav">
-            <div class="sidebar-heading">メイン</div>
-            <a href="{{ route('admin.dashboard') }}" class="sidebar-link @if(request()->routeIs('admin.dashboard')) active @endif">
-                <i class="bi bi-grid-1x2"></i> ダッシュボード
-            </a>
+    <div id="page-container" class="sidebar-o enable-page-overlay side-scroll page-header-modern main-content-boxed">
 
-            <div class="sidebar-heading">顧客管理</div>
-            <a href="{{ route('admin.customers.index') }}" class="sidebar-link @if(request()->routeIs('admin.customers.*')) active @endif">
-                <i class="bi bi-people"></i> 顧客一覧
-            </a>
-            <a href="{{ route('admin.customers.create') }}" class="sidebar-link">
-                <i class="bi bi-person-plus"></i> 顧客追加
-            </a>
+        {{-- Sidebar --}}
+        <nav id="sidebar">
+            <div class="sidebar-content">
+                <div class="content-header justify-content-lg-center">
+                    <a class="link-fx fw-bold" href="{{ route('admin.dashboard') }}">
+                        <i class="fa fa-box text-primary"></i>
+                        <span class="fs-4 text-dual"> Pack</span><span class="fs-4 text-primary">to</span>
+                    </a>
+                </div>
+                <div class="content-side content-side-full">
+                    <ul class="nav-main">
+                        <li class="nav-main-heading">メイン</li>
+                        <li class="nav-main-item">
+                            <a class="nav-main-link @if(request()->routeIs('admin.dashboard')) active @endif" href="{{ route('admin.dashboard') }}">
+                                <i class="nav-main-link-icon fa fa-house-user"></i>
+                                <span class="nav-main-link-name">ダッシュボード</span>
+                            </a>
+                        </li>
 
-            <div class="sidebar-heading">システム</div>
-            <a href="{{ route('admin.masters.index') }}" class="sidebar-link @if(request()->routeIs('admin.masters.*')) active @endif">
-                <i class="bi bi-shield-lock"></i> マスター
-            </a>
-            <a href="{{ route('admin.audit-logs.index') }}" class="sidebar-link @if(request()->routeIs('admin.audit-logs.*')) active @endif">
-                <i class="bi bi-clock-history"></i> 監査ログ
-            </a>
+                        <li class="nav-main-heading">顧客管理</li>
+                        <li class="nav-main-item">
+                            <a class="nav-main-link @if(request()->routeIs('admin.customers.index') || request()->routeIs('admin.customers.show') || request()->routeIs('admin.customers.edit')) active @endif" href="{{ route('admin.customers.index') }}">
+                                <i class="nav-main-link-icon fa fa-users"></i>
+                                <span class="nav-main-link-name">顧客一覧</span>
+                            </a>
+                        </li>
+                        <li class="nav-main-item">
+                            <a class="nav-main-link @if(request()->routeIs('admin.customers.create')) active @endif" href="{{ route('admin.customers.create') }}">
+                                <i class="nav-main-link-icon fa fa-user-plus"></i>
+                                <span class="nav-main-link-name">顧客追加</span>
+                            </a>
+                        </li>
 
-            <div class="sidebar-heading">アカウント</div>
-            <a href="{{ route('account.edit') }}" class="sidebar-link @if(request()->routeIs('account.*')) active @endif">
-                <i class="bi bi-person-gear"></i> アカウント設定
-            </a>
-            <a href="{{ route('two-factor.show') }}" class="sidebar-link @if(request()->routeIs('two-factor.*')) active @endif">
-                <i class="bi bi-shield-check"></i> 2FA 設定
-            </a>
-        </div>
-    </nav>
-    <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+                        <li class="nav-main-heading">システム</li>
+                        <li class="nav-main-item">
+                            <a class="nav-main-link @if(request()->routeIs('admin.masters.*')) active @endif" href="{{ route('admin.masters.index') }}">
+                                <i class="nav-main-link-icon fa fa-shield-halved"></i>
+                                <span class="nav-main-link-name">マスター</span>
+                            </a>
+                        </li>
+                        <li class="nav-main-item">
+                            <a class="nav-main-link @if(request()->routeIs('admin.audit-logs.*')) active @endif" href="{{ route('admin.audit-logs.index') }}">
+                                <i class="nav-main-link-icon fa fa-clock-rotate-left"></i>
+                                <span class="nav-main-link-name">監査ログ</span>
+                            </a>
+                        </li>
 
-    {{-- Header --}}
-    <header class="main-header">
-        <button class="btn btn-sm btn-light sidebar-toggle me-3" onclick="toggleSidebar()">
-            <i class="bi bi-list fs-5"></i>
-        </button>
-        <div class="spacer"></div>
-        @auth
-            <div class="user-info me-3">
-                <strong>{{ auth()->user()->name }}</strong>
-                <span class="badge bg-secondary ms-1" style="font-size: 10px;">{{ auth()->user()->role }}</span>
+                        <li class="nav-main-heading">アカウント</li>
+                        <li class="nav-main-item">
+                            <a class="nav-main-link @if(request()->routeIs('account.*')) active @endif" href="{{ route('account.edit') }}">
+                                <i class="nav-main-link-icon fa fa-user-gear"></i>
+                                <span class="nav-main-link-name">アカウント設定</span>
+                            </a>
+                        </li>
+                        <li class="nav-main-item">
+                            <a class="nav-main-link @if(request()->routeIs('two-factor.*')) active @endif" href="{{ route('two-factor.show') }}">
+                                <i class="nav-main-link-icon fa fa-shield-check"></i>
+                                <span class="nav-main-link-name">2FA 設定</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
             </div>
-            <form method="POST" action="{{ url('/logout') }}" class="d-inline">
-                @csrf
-                <button type="submit" class="btn btn-sm btn-outline-secondary">
-                    <i class="bi bi-box-arrow-right"></i> ログアウト
-                </button>
-            </form>
-        @endauth
-    </header>
+        </nav>
 
-    {{-- Content --}}
-    <main class="main-content">
-        @if (session('status'))
-            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                {{ session('status') }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        <div class="page-overlay" id="pageOverlay" onclick="toggleSidebar()"></div>
+
+        {{-- Header --}}
+        <header id="page-header">
+            <div class="content-header">
+                <div class="d-flex align-items-center">
+                    <button class="btn btn-sm btn-alt-secondary sidebar-toggle-btn" type="button" onclick="toggleSidebar()">
+                        <i class="fa fa-fw fa-bars"></i>
+                    </button>
+                </div>
+                <div class="d-flex align-items-center">
+                    @auth
+                        <span class="fs-sm text-muted me-2">
+                            <i class="fa fa-user-circle me-1"></i>
+                            <strong class="text-dark">{{ auth()->user()->name }}</strong>
+                            <span class="badge bg-secondary ms-1" style="font-size: .625rem;">{{ auth()->user()->role }}</span>
+                        </span>
+                        <form method="POST" action="{{ url('/logout') }}" class="d-inline">
+                            @csrf
+                            <button type="submit" class="btn btn-sm btn-alt-secondary">
+                                <i class="fa fa-right-from-bracket"></i>
+                                <span class="d-none d-sm-inline ms-1">ログアウト</span>
+                            </button>
+                        </form>
+                    @endauth
+                </div>
             </div>
-        @endif
-        @yield('content')
-    </main>
+        </header>
+
+        {{-- Main Content --}}
+        <main id="main-container">
+            <div class="content">
+                @if (session('status'))
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        {{ session('status') }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                @endif
+                @yield('content')
+            </div>
+        </main>
+    </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         function toggleSidebar() {
-            document.getElementById('sidebar').classList.toggle('open');
-            document.getElementById('sidebarOverlay').classList.toggle('show');
+            document.getElementById('sidebar').classList.toggle('sidebar-o');
+            document.getElementById('pageOverlay').classList.toggle('show');
         }
     </script>
     @yield('scripts')

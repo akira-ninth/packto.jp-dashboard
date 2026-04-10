@@ -7,13 +7,17 @@
 
     {{-- Recovery codes just generated --}}
     @if (session('2fa.recovery_codes_just_generated'))
-        <div class="alert alert-warning">
-            <h5 class="alert-heading"><i class="bi bi-exclamation-triangle me-1"></i> リカバリーコード (この画面でのみ表示)</h5>
-            <p class="small mb-2">Authenticator にアクセスできなくなった場合にこのコードでログインできます。印刷するかパスワードマネージャに保存してください。各コードは 1 回限り。</p>
-            <div class="bg-white rounded p-3">
-                @foreach (session('2fa.recovery_codes_just_generated') as $code)
-                    <code class="d-block" style="font-size: 16px; letter-spacing: .05em;">{{ $code }}</code>
-                @endforeach
+        <div class="block block-rounded" style="border-left: 4px solid #f59e0b;">
+            <div class="block-header block-header-default" style="background: #fffbeb;">
+                <h3 class="block-title"><i class="fa fa-triangle-exclamation text-warning me-1"></i> リカバリーコード (この画面でのみ表示)</h3>
+            </div>
+            <div class="block-content" style="background: #fffbeb;">
+                <p class="fs-sm mb-3 text-muted">Authenticator にアクセスできなくなった場合にこのコードでログインできます。印刷するかパスワードマネージャに保存してください。各コードは 1 回限り。</p>
+                <div class="bg-white rounded p-3">
+                    @foreach (session('2fa.recovery_codes_just_generated') as $code)
+                        <code class="d-block" style="font-size: 1rem; letter-spacing: .05em;">{{ $code }}</code>
+                    @endforeach
+                </div>
             </div>
         </div>
     @endif
@@ -22,18 +26,18 @@
         <div class="alert alert-success">{{ session('status') }}</div>
     @endif
 
-    <div class="card" style="max-width: 560px;">
-        <div class="card-body">
+    <div class="block block-rounded" style="max-width: 560px;">
+        <div class="block-content">
             @if ($enabled)
-                <h5 class="fw-bold"><i class="bi bi-check-circle text-success me-1"></i> 2FA は有効です</h5>
-                <p class="text-muted small">次回ログイン時に Authenticator の 6 桁コードが必要になります。</p>
+                <h5 class="fw-bold"><i class="fa fa-check-circle text-success me-1"></i> 2FA は有効です</h5>
+                <p class="text-muted fs-sm">次回ログイン時に Authenticator の 6 桁コードが必要になります。</p>
 
                 <hr>
                 <h6 class="fw-bold">リカバリーコード再生成</h6>
                 <form method="POST" action="{{ route('two-factor.recovery-codes') }}" class="mb-4">
                     @csrf
-                    <p class="text-muted small">既存のリカバリーコードを破棄して新しい 6 個を発行します。</p>
-                    <button type="submit" class="btn btn-sm btn-outline-secondary">再生成</button>
+                    <p class="text-muted fs-sm">既存のリカバリーコードを破棄して新しい 6 個を発行します。</p>
+                    <button type="submit" class="btn btn-sm btn-alt-secondary">再生成</button>
                 </form>
 
                 <hr>
@@ -45,12 +49,12 @@
                         <input type="password" name="current_password" class="form-control form-control-sm @error('current_password') is-invalid @enderror" required>
                         @error('current_password')<div class="invalid-feedback">{{ $message }}</div>@enderror
                     </div>
-                    <button type="submit" class="btn btn-sm btn-danger">2FA を無効化</button>
+                    <button type="submit" class="btn btn-sm btn-alt-danger">2FA を無効化</button>
                 </form>
 
             @elseif ($qrDataUri && $pendingSecret)
                 <h5 class="fw-bold mb-3">セットアップ</h5>
-                <ol class="text-muted small" style="line-height: 1.8;">
+                <ol class="text-muted fs-sm" style="line-height: 1.8;">
                     <li>Google Authenticator / Authy / 1Password などの TOTP アプリを開く</li>
                     <li>下記 QR コードをスキャン (もしくは Secret を手入力)</li>
                     <li>表示された 6 桁コードを入力して「有効化」</li>
@@ -58,7 +62,7 @@
                 <div class="text-center p-3 bg-light rounded mb-3">
                     <img src="{{ $qrDataUri }}" alt="2FA QR" style="display: inline-block;">
                 </div>
-                <p class="text-center small text-muted mb-3">
+                <p class="text-center fs-sm text-muted mb-3">
                     Secret: <code class="user-select-all">{{ $pendingSecret }}</code>
                 </p>
                 <form method="POST" action="{{ route('two-factor.confirm') }}">
@@ -69,16 +73,16 @@
                         @error('code')<div class="invalid-feedback">{{ $message }}</div>@enderror
                     </div>
                     <div class="text-center mt-3">
-                        <button type="submit" class="btn btn-primary">有効化</button>
+                        <button type="submit" class="btn btn-alt-primary">有効化</button>
                     </div>
                 </form>
 
             @else
                 <h5 class="fw-bold">2FA は無効です</h5>
-                <p class="text-muted small">アカウントへの不正アクセスを防ぐため、有効化を推奨します (特に master ロールの場合)。</p>
+                <p class="text-muted fs-sm">アカウントへの不正アクセスを防ぐため、有効化を推奨します (特に master ロールの場合)。</p>
                 <form method="POST" action="{{ route('two-factor.setup') }}">
                     @csrf
-                    <button type="submit" class="btn btn-primary">2FA を設定する</button>
+                    <button type="submit" class="btn btn-alt-primary">2FA を設定する</button>
                 </form>
             @endif
         </div>
