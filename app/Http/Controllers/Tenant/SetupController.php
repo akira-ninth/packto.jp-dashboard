@@ -23,10 +23,30 @@ class SetupController extends Controller
         $subdomain = $customer?->subdomain ?? 'example';
         $origin = $customer?->origin_url ?? 'https://example.com';
 
+        // Origin の Web サーバを推定
+        $serverType = null;
+        try {
+            $resp = Http::timeout(5)
+                ->withHeaders(['User-Agent' => 'Packto-ServerDetect/1.0'])
+                ->withOptions(['allow_redirects' => false])
+                ->head($origin);
+            $serverHeader = strtolower((string) $resp->header('server'));
+            if (str_contains($serverHeader, 'nginx')) {
+                $serverType = 'nginx';
+            } elseif (str_contains($serverHeader, 'apache')) {
+                $serverType = 'apache';
+            } elseif (str_contains($serverHeader, 'litespeed')) {
+                $serverType = 'litespeed';
+            }
+        } catch (\Throwable) {
+            // 推定失敗 → null のまま (両方表示)
+        }
+
         return view('tenant.setup', [
             'customer' => $customer,
             'subdomain' => $subdomain,
             'origin' => $origin,
+            'serverType' => $serverType,
         ]);
     }
 
