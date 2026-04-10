@@ -222,14 +222,14 @@
             border-color: #3b82f6;
         }
         .btn-alt-secondary {
-            color: #6c757d;
-            background-color: rgba(108,117,125,.12);
-            border-color: transparent;
+            color: #475569;
+            background-color: #e2e8f0;
+            border-color: #e2e8f0;
         }
         .btn-alt-secondary:hover, .btn-alt-secondary:focus {
             color: #fff;
-            background-color: #6c757d;
-            border-color: #6c757d;
+            background-color: #64748b;
+            border-color: #64748b;
         }
         .btn-alt-danger {
             color: #e53e3e;

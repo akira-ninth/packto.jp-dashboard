@@ -114,7 +114,7 @@ class DomainRoutingTest extends TestCase
         $response = $this->get('/login');
 
         $response->assertOk();
-        $response->assertSee('ようこそ');
+        $response->assertSee('ログイン');
         $response->assertSee('メールアドレス');
     }
 
