@@ -20,18 +20,23 @@
                 <tr>
                     <th>サブドメイン</th>
                     <th>表示名</th>
-                    <th>Origin</th>
                     <th>プラン</th>
                     <th>状態</th>
+                    <th class="text-end">先月 req</th>
+                    <th class="text-end">先月 転送量</th>
                     <th class="text-end"></th>
                 </tr>
             </thead>
             <tbody>
                 @forelse ($customers as $customer)
+                    @php
+                        $usage = $usageMap[$customer->subdomain] ?? null;
+                        $reqs = $usage ? (int) $usage['reqs'] : 0;
+                        $outMb = $usage ? (float) $usage['output_bytes'] / 1024 / 1024 : 0;
+                    @endphp
                     <tr>
                         <td><code class="c-blue-500">{{ $customer->subdomain }}.packto.jp</code></td>
                         <td>{{ $customer->display_name }}</td>
-                        <td><a href="{{ $customer->origin_url }}" target="_blank" rel="noopener" class="c-grey-600 fsz-sm">{{ $customer->origin_url }}</a></td>
                         <td><span class="badge badge-plan-{{ $customer->plan->slug }}">{{ $customer->plan->name }}</span></td>
                         <td>
                             @if ($customer->active)
@@ -41,13 +46,27 @@
                             @endif
                         </td>
                         <td class="text-end">
+                            @if ($reqs > 0)
+                                <span class="fw-600">{{ number_format($reqs) }}</span>
+                            @else
+                                <span class="c-grey-400">—</span>
+                            @endif
+                        </td>
+                        <td class="text-end">
+                            @if ($outMb > 0)
+                                <span class="fw-600">{{ number_format($outMb, 1) }} <span class="c-grey-500 fsz-sm">MB</span></span>
+                            @else
+                                <span class="c-grey-400">—</span>
+                            @endif
+                        </td>
+                        <td class="text-end">
                             <a href="{{ route('admin.customers.show', $customer) }}" class="btn btn-outline-secondary btn-sm">
                                 <i class="fa fa-eye mR-5"></i> 詳細
                             </a>
                         </td>
                     </tr>
                 @empty
-                    <tr><td colspan="6" class="ta-c c-grey-600 pY-20">顧客がいません</td></tr>
+                    <tr><td colspan="7" class="ta-c c-grey-600 pY-20">顧客がいません</td></tr>
                 @endforelse
             </tbody>
         </table>

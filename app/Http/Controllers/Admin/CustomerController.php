@@ -25,8 +25,12 @@ class CustomerController extends Controller
 
     public function index(): View
     {
+        $customers = Customer::with('plan')->orderBy('subdomain')->get();
+        $usageMap = $this->analytics->getAllCustomersSummary(30);
+
         return view('admin.customers.index', [
-            'customers' => Customer::with('plan')->orderBy('subdomain')->get(),
+            'customers' => $customers,
+            'usageMap' => $usageMap,
         ]);
     }
 
@@ -97,14 +101,24 @@ class CustomerController extends Controller
         return redirect()->route('admin.customers.index')->with('status', 'created');
     }
 
-    public function show(Customer $customer): View
+    private const ALLOWED_PERIODS = [7, 30, 90];
+
+    public function show(Request $request, Customer $customer): View
     {
         $customer->load('plan', 'users');
 
+        $days = (int) $request->query('days', 7);
+        if (! in_array($days, self::ALLOWED_PERIODS, true)) {
+            $days = 7;
+        }
+
         return view('admin.customers.show', [
             'customer' => $customer,
-            'usageSummary' => $this->analytics->getCustomerSummary($customer->subdomain, 7),
-            'usageByFormat' => $this->analytics->getCustomerByFormat($customer->subdomain, 7),
+            'days' => $days,
+            'usageSummary' => $this->analytics->getCustomerSummary($customer->subdomain, $days),
+            'usageByDay' => $this->analytics->getCustomerByDay($customer->subdomain, $days),
+            'usageByFormat' => $this->analytics->getCustomerByFormat($customer->subdomain, $days),
+            'usageByCache' => $this->analytics->getCustomerByCacheStatus($customer->subdomain, $days),
         ]);
     }
 

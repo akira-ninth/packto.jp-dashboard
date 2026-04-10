@@ -68,9 +68,9 @@
                 </div>
                 <div class="peer">
                     <div class="btn-group btn-group-sm" role="group">
-                        <a href="?days=7" class="btn {{ $days === 7 ? 'btn-primary' : 'btn-outline-secondary' }}">7日</a>
-                        <a href="?days=30" class="btn {{ $days === 30 ? 'btn-primary' : 'btn-outline-secondary' }}">1か月</a>
-                        <a href="?days=90" class="btn {{ $days === 90 ? 'btn-primary' : 'btn-outline-secondary' }}">3か月</a>
+                        <a href="?days=7" class="btn {{ $days === 7 ? 'btn-primary' : 'btn-secondary' }}">7日</a>
+                        <a href="?days=30" class="btn {{ $days === 30 ? 'btn-primary' : 'btn-secondary' }}">1か月</a>
+                        <a href="?days=90" class="btn {{ $days === 90 ? 'btn-primary' : 'btn-secondary' }}">3か月</a>
                     </div>
                 </div>
             </div>

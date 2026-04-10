@@ -12,6 +12,20 @@
         .badge-plan-pro { background: #ede9fe; color: #6d28d9; }
         .badge-active { background: #dcfce7; color: #166534; }
         .badge-inactive { background: #fee2e2; color: #991b1b; }
+
+        /* === Master 専用: ダークサイドバー === */
+        .sidebar { background: #1a1d21 !important; }
+        .sidebar .sidebar-inner { background: #1a1d21 !important; }
+        .sidebar .sidebar-logo { border-bottom: 1px solid rgba(255,255,255,.08); }
+        .sidebar .logo-text { color: #fff !important; }
+        .sidebar .sidebar-link .title { color: #a0aec0; }
+        .sidebar .sidebar-link:hover .title,
+        .sidebar .sidebar-link:hover .icon-holder > i { color: #fff; }
+        .sidebar .nav-item.actived .sidebar-link .title { color: #fff; font-weight: 600; }
+        .sidebar .nav-item.actived .sidebar-link { background: rgba(99,102,241,.15); border-left: 3px solid #6366f1; }
+        .sidebar .nav-item .sidebar-link { border-left: 3px solid transparent; }
+        .sidebar .sidebar-link .icon-holder > i { opacity: .7; }
+        .sidebar .nav-item.actived .sidebar-link .icon-holder > i { opacity: 1; color: #818cf8 !important; }
     </style>
     @yield('head')
 </head>

@@ -106,7 +106,6 @@ class DomainRoutingTest extends TestCase
 
         $response->assertOk();
         $response->assertSee($customer->subdomain);
-        $response->assertSee($customer->origin_url);
     }
 
     public function test_login_form_renders(): void

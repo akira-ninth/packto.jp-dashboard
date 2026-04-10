@@ -100,6 +100,30 @@ class CloudflareAnalyticsService
         return $this->query($sql);
     }
 
+    /**
+     * 全顧客のサマリを 1 回の SQL で取得 (index1 = subdomain で GROUP BY)
+     * 顧客一覧ページでヒット数を並べるために使う。
+     *
+     * @return array<string, array{reqs: string, output_bytes: float, input_bytes: float}>
+     */
+    public function getAllCustomersSummary(int $days = 30): array
+    {
+        $sql = sprintf(
+            "SELECT index1 AS subdomain, count() AS reqs, "
+            . "sum(double1) AS output_bytes, sum(double2) AS input_bytes "
+            . "FROM imagy_requests WHERE timestamp > NOW() - INTERVAL '%d' DAY "
+            . "GROUP BY subdomain ORDER BY reqs DESC",
+            max(1, (int) $days),
+        );
+
+        $rows = $this->query($sql);
+        $result = [];
+        foreach ($rows as $row) {
+            $result[$row['subdomain'] ?? ''] = $row;
+        }
+        return $result;
+    }
+
     public function isConfigured(): bool
     {
         return ! empty(config('services.cloudflare.api_token'))
