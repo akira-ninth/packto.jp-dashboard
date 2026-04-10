@@ -64,16 +64,18 @@
                     <label class="form-check-label" for="createUserCheck">初期ユーザを作成する</label>
                 </div>
 
-                <div class="mB-15">
-                    <label class="form-label">ユーザ名</label>
-                    <input type="text" name="user_name" value="{{ old('user_name') }}" class="form-control" style="max-width: 400px;">
-                    @error('user_name')<div class="c-red-500 mT-5 fsz-sm">{{ $message }}</div>@enderror
-                </div>
+                <div id="userFields" style="{{ old('create_user') ? '' : 'display:none;' }}">
+                    <div class="mB-15">
+                        <label class="form-label">ユーザ名</label>
+                        <input type="text" name="user_name" value="{{ old('user_name') }}" class="form-control" style="max-width: 400px;">
+                        @error('user_name')<div class="c-red-500 mT-5 fsz-sm">{{ $message }}</div>@enderror
+                    </div>
 
-                <div class="mB-15">
-                    <label class="form-label">メールアドレス</label>
-                    <input type="email" name="user_email" value="{{ old('user_email') }}" class="form-control" style="max-width: 400px;">
-                    @error('user_email')<div class="c-red-500 mT-5 fsz-sm">{{ $message }}</div>@enderror
+                    <div class="mB-15">
+                        <label class="form-label">メールアドレス</label>
+                        <input type="email" name="user_email" value="{{ old('user_email') }}" class="form-control" style="max-width: 400px;">
+                        @error('user_email')<div class="c-red-500 mT-5 fsz-sm">{{ $message }}</div>@enderror
+                    </div>
                 </div>
             </div>
 
@@ -123,6 +125,13 @@
 
     subdomainInput.addEventListener('blur', () => checkUnique('subdomain', subdomainInput, document.getElementById('subdomainFeedback')));
     displayNameInput.addEventListener('blur', () => checkUnique('display_name', displayNameInput, document.getElementById('displayNameFeedback')));
+
+    // チェックボックスでユーザ入力欄の表示/非表示を切替
+    const check = document.getElementById('createUserCheck');
+    const fields = document.getElementById('userFields');
+    check.addEventListener('change', () => {
+        fields.style.display = check.checked ? '' : 'none';
+    });
 })();
 </script>
 @endsection
