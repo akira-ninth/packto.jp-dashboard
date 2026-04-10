@@ -4,55 +4,77 @@
 
 @section('content')
     @if ($customer)
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h1 class="h4 mb-0 fw-bold">{{ $customer->display_name }}</h1>
-            @if ($customer->active)
-                <span class="badge badge-active"><i class="fa fa-check-circle me-1"></i>配信中</span>
-            @else
-                <span class="badge badge-inactive"><i class="fa fa-times-circle me-1"></i>停止中</span>
-            @endif
+        <div class="peers ai-c jc-sb fxw-nw mT-10 mB-30">
+            <div class="peer">
+                <h4 class="c-grey-900">{{ $customer->display_name }}</h4>
+            </div>
+            <div class="peer">
+                @if ($customer->active)
+                    <span class="badge badge-active"><i class="fa fa-check-circle mR-5"></i>配信中</span>
+                @else
+                    <span class="badge badge-inactive"><i class="fa fa-times-circle mR-5"></i>停止中</span>
+                @endif
+            </div>
         </div>
 
         {{-- Info tiles --}}
-        <div class="row g-3 mb-4">
+        <div class="row gap-20 mB-20">
             <div class="col-md-4">
-                <a class="block block-rounded block-link-shadow" href="javascript:void(0)">
-                    <div class="block-content block-content-full d-flex align-items-center">
-                        <div class="me-3">
-                            <i class="fa fa-globe fa-2x opacity-25 text-primary"></i>
-                        </div>
-                        <div>
-                            <div class="fw-semibold" style="font-size: 1rem;">{{ $customer->subdomain }}.packto.jp</div>
-                            <div class="fs-sm fw-semibold text-uppercase text-muted">配信ドメイン</div>
+                <div class="layers bd bgc-white p-20">
+                    <div class="layer w-100 mB-10">
+                        <h6 class="lh-1">配信ドメイン</h6>
+                    </div>
+                    <div class="layer w-100">
+                        <div class="peers ai-c fxw-nw">
+                            <div class="peer mR-15">
+                                <span class="d-ib lh-0 va-m fw-600 bdrs-10em pX-15 pY-15 bgc-blue-50 c-blue-500">
+                                    <i class="ti-world"></i>
+                                </span>
+                            </div>
+                            <div class="peer peer-greed">
+                                <span class="fw-600">{{ $customer->subdomain }}.packto.jp</span>
+                            </div>
                         </div>
                     </div>
-                </a>
+                </div>
             </div>
             <div class="col-md-4">
-                <a class="block block-rounded block-link-shadow" href="javascript:void(0)">
-                    <div class="block-content block-content-full d-flex align-items-center">
-                        <div class="me-3">
-                            <i class="fa fa-link fa-2x opacity-25 text-secondary"></i>
-                        </div>
-                        <div>
-                            <div class="fw-semibold fs-sm">{{ $customer->origin_url }}</div>
-                            <div class="fs-sm fw-semibold text-uppercase text-muted">Origin</div>
+                <div class="layers bd bgc-white p-20">
+                    <div class="layer w-100 mB-10">
+                        <h6 class="lh-1">Origin</h6>
+                    </div>
+                    <div class="layer w-100">
+                        <div class="peers ai-c fxw-nw">
+                            <div class="peer mR-15">
+                                <span class="d-ib lh-0 va-m fw-600 bdrs-10em pX-15 pY-15 bgc-grey-100 c-grey-600">
+                                    <i class="ti-link"></i>
+                                </span>
+                            </div>
+                            <div class="peer peer-greed">
+                                <span class="fw-600 fsz-sm">{{ $customer->origin_url }}</span>
+                            </div>
                         </div>
                     </div>
-                </a>
+                </div>
             </div>
             <div class="col-md-4">
-                <a class="block block-rounded block-link-shadow" href="javascript:void(0)">
-                    <div class="block-content block-content-full d-flex align-items-center">
-                        <div class="me-3">
-                            <i class="fa fa-star fa-2x opacity-25" style="color: #6d28d9;"></i>
-                        </div>
-                        <div>
-                            <div class="fw-semibold" style="font-size: 1.125rem;">{{ $customer->plan->name }}</div>
-                            <div class="fs-sm fw-semibold text-uppercase text-muted">プラン</div>
+                <div class="layers bd bgc-white p-20">
+                    <div class="layer w-100 mB-10">
+                        <h6 class="lh-1">プラン</h6>
+                    </div>
+                    <div class="layer w-100">
+                        <div class="peers ai-c fxw-nw">
+                            <div class="peer mR-15">
+                                <span class="d-ib lh-0 va-m fw-600 bdrs-10em pX-15 pY-15 bgc-purple-50 c-purple-500">
+                                    <i class="ti-star"></i>
+                                </span>
+                            </div>
+                            <div class="peer peer-greed">
+                                <span class="fw-600 fsz-lg">{{ $customer->plan->name }}</span>
+                            </div>
                         </div>
                     </div>
-                </a>
+                </div>
             </div>
         </div>
 
@@ -66,130 +88,160 @@
         @endphp
 
         @if ($totalReqs > 0)
-            <div class="row g-3 mb-4">
-                <div class="col-6 col-lg-3">
-                    <a class="block block-rounded block-link-shadow text-center" href="javascript:void(0)">
-                        <div class="block-content block-content-full">
-                            <div class="fs-3 fw-semibold">{{ number_format($totalReqs) }}</div>
-                            <div class="fs-sm fw-semibold text-uppercase text-muted">リクエスト数</div>
+            <div class="row gap-20 mB-20">
+                <div class="col-md-3">
+                    <div class="layers bd bgc-white p-20">
+                        <div class="layer w-100 mB-10">
+                            <h6 class="lh-1">リクエスト数</h6>
                         </div>
-                    </a>
+                        <div class="layer w-100">
+                            <div class="peers ai-sb fxw-nw">
+                                <div class="peer peer-greed">
+                                    <span class="d-ib lh-0 va-m fw-600 bdrs-10em pX-15 pY-15 bgc-blue-50 c-blue-500">
+                                        <i class="ti-bolt"></i>
+                                    </span>
+                                </div>
+                                <div class="peer">
+                                    <span class="c-grey-900 fsz-lg fw-600">{{ number_format($totalReqs) }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="col-6 col-lg-3">
-                    <a class="block block-rounded block-link-shadow text-center" href="javascript:void(0)">
-                        <div class="block-content block-content-full">
-                            <div class="fs-3 fw-semibold">{{ number_format($outBytes / 1024 / 1024, 2) }}</div>
-                            <div class="fs-sm fw-semibold text-uppercase text-muted">配信 MB</div>
+                <div class="col-md-3">
+                    <div class="layers bd bgc-white p-20">
+                        <div class="layer w-100 mB-10">
+                            <h6 class="lh-1">配信 MB</h6>
                         </div>
-                    </a>
+                        <div class="layer w-100">
+                            <div class="peers ai-sb fxw-nw">
+                                <div class="peer peer-greed">
+                                    <span class="d-ib lh-0 va-m fw-600 bdrs-10em pX-15 pY-15 bgc-purple-50 c-purple-500">
+                                        <i class="ti-cloud-up"></i>
+                                    </span>
+                                </div>
+                                <div class="peer">
+                                    <span class="c-grey-900 fsz-lg fw-600">{{ number_format($outBytes / 1024 / 1024, 2) }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="col-6 col-lg-3">
-                    <a class="block block-rounded block-link-shadow text-center" href="javascript:void(0)">
-                        <div class="block-content block-content-full">
-                            <div class="fs-3 fw-semibold">{{ number_format($inBytes / 1024 / 1024, 2) }}</div>
-                            <div class="fs-sm fw-semibold text-uppercase text-muted">Origin MB</div>
+                <div class="col-md-3">
+                    <div class="layers bd bgc-white p-20">
+                        <div class="layer w-100 mB-10">
+                            <h6 class="lh-1">Origin MB</h6>
                         </div>
-                    </a>
+                        <div class="layer w-100">
+                            <div class="peers ai-sb fxw-nw">
+                                <div class="peer peer-greed">
+                                    <span class="d-ib lh-0 va-m fw-600 bdrs-10em pX-15 pY-15 bgc-orange-50 c-orange-500">
+                                        <i class="ti-cloud-down"></i>
+                                    </span>
+                                </div>
+                                <div class="peer">
+                                    <span class="c-grey-900 fsz-lg fw-600">{{ number_format($inBytes / 1024 / 1024, 2) }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 @if ($ratio !== null)
-                    <div class="col-6 col-lg-3">
-                        <a class="block block-rounded block-link-shadow text-center" href="javascript:void(0)">
-                            <div class="block-content block-content-full">
-                                <div class="fs-3 fw-semibold text-success">{{ number_format($ratio, 1) }}%</div>
-                                <div class="fs-sm fw-semibold text-uppercase text-muted">圧縮率</div>
+                    <div class="col-md-3">
+                        <div class="layers bd bgc-white p-20">
+                            <div class="layer w-100 mB-10">
+                                <h6 class="lh-1">圧縮率</h6>
                             </div>
-                        </a>
+                            <div class="layer w-100">
+                                <div class="peers ai-sb fxw-nw">
+                                    <div class="peer peer-greed">
+                                        <span class="d-ib lh-0 va-m fw-600 bdrs-10em pX-15 pY-15 bgc-green-50 c-green-500">
+                                            <i class="ti-arrow-down"></i>
+                                        </span>
+                                    </div>
+                                    <div class="peer">
+                                        <span class="c-green-500 fsz-lg fw-600">{{ number_format($ratio, 1) }}%</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 @endif
             </div>
         @else
-            <div class="alert alert-info">
-                <i class="fa fa-info-circle me-1"></i> 直近 7 日のリクエストがありません (Analytics Engine の集計待ちかも)
+            <div class="alert alert-info mB-20">
+                <i class="fa fa-info-circle mR-5"></i> 直近 7 日のリクエストがありません (Analytics Engine の集計待ちかも)
             </div>
         @endif
 
         {{-- Daily chart --}}
         @if (! empty($byDay))
-            <div class="block block-rounded">
-                <div class="block-header block-header-default">
-                    <h3 class="block-title"><i class="fa fa-chart-line me-2 opacity-50"></i>日別推移 (7 日)</h3>
-                </div>
-                <div class="block-content">
-                    <canvas id="dayChart" height="80"></canvas>
-                </div>
-                <div class="block-content p-0">
-                    <table class="table table-sm table-hover table-vcenter mb-0">
-                        <thead><tr><th>日付</th><th class="text-end">req</th><th class="text-end">配信 MB</th><th class="text-end">origin MB</th></tr></thead>
-                        <tbody>
-                            @foreach ($byDay as $row)
-                                <tr>
-                                    <td><code>{{ $row['day'] }}</code></td>
-                                    <td class="text-end">{{ number_format((int) $row['reqs']) }}</td>
-                                    <td class="text-end">{{ number_format((float) $row['output_bytes'] / 1024 / 1024, 2) }}</td>
-                                    <td class="text-end">{{ number_format((float) $row['input_bytes'] / 1024 / 1024, 2) }}</td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
+            <div class="bgc-white bd bdrs-3 p-20 mB-20">
+                <h4 class="c-grey-900 mB-20"><i class="ti-bar-chart mR-10 c-grey-500"></i>日別推移 (7 日)</h4>
+                <canvas id="dayChart" height="80"></canvas>
+                <table class="table table-sm mT-20">
+                    <thead><tr><th>日付</th><th class="text-end">req</th><th class="text-end">配信 MB</th><th class="text-end">origin MB</th></tr></thead>
+                    <tbody>
+                        @foreach ($byDay as $row)
+                            <tr>
+                                <td><code>{{ $row['day'] }}</code></td>
+                                <td class="text-end">{{ number_format((int) $row['reqs']) }}</td>
+                                <td class="text-end">{{ number_format((float) $row['output_bytes'] / 1024 / 1024, 2) }}</td>
+                                <td class="text-end">{{ number_format((float) $row['input_bytes'] / 1024 / 1024, 2) }}</td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
             </div>
         @endif
 
         {{-- Format breakdown --}}
-        <div class="row g-3">
+        <div class="row gap-20">
             @if (! empty($byFormat))
                 <div class="col-lg-6">
-                    <div class="block block-rounded">
-                        <div class="block-header block-header-default">
-                            <h3 class="block-title"><i class="fa fa-file-code me-2 opacity-50"></i>フォーマット別</h3>
-                        </div>
-                        <div class="block-content p-0">
-                            <table class="table table-sm table-hover table-vcenter mb-0">
-                                <thead><tr><th>format</th><th class="text-end">req</th><th class="text-end">origin</th><th class="text-end">配信</th><th class="text-end">圧縮</th></tr></thead>
-                                <tbody>
-                                    @foreach ($byFormat as $row)
-                                        @php $rIn = (float)($row['input_bytes'] ?? 0); $rOut = (float)($row['output_bytes'] ?? 0); $rRatio = $rIn > 0 ? ($rOut/$rIn)*100 : null; @endphp
-                                        <tr>
-                                            <td><code>{{ $row['format'] ?: '—' }}</code></td>
-                                            <td class="text-end">{{ number_format((int) $row['reqs']) }}</td>
-                                            <td class="text-end">{{ number_format($rIn/1024/1024, 2) }}</td>
-                                            <td class="text-end">{{ number_format($rOut/1024/1024, 2) }}</td>
-                                            <td class="text-end text-success fw-bold">{{ $rRatio !== null ? number_format($rRatio,1).'%' : '—' }}</td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        </div>
+                    <div class="bgc-white bd bdrs-3 p-20 mB-20">
+                        <h4 class="c-grey-900 mB-20"><i class="ti-file mR-10 c-grey-500"></i>フォーマット別</h4>
+                        <table class="table table-sm">
+                            <thead><tr><th>format</th><th class="text-end">req</th><th class="text-end">origin</th><th class="text-end">配信</th><th class="text-end">圧縮</th></tr></thead>
+                            <tbody>
+                                @foreach ($byFormat as $row)
+                                    @php $rIn = (float)($row['input_bytes'] ?? 0); $rOut = (float)($row['output_bytes'] ?? 0); $rRatio = $rIn > 0 ? ($rOut/$rIn)*100 : null; @endphp
+                                    <tr>
+                                        <td><code>{{ $row['format'] ?: '—' }}</code></td>
+                                        <td class="text-end">{{ number_format((int) $row['reqs']) }}</td>
+                                        <td class="text-end">{{ number_format($rIn/1024/1024, 2) }}</td>
+                                        <td class="text-end">{{ number_format($rOut/1024/1024, 2) }}</td>
+                                        <td class="text-end c-green-500 fw-600">{{ $rRatio !== null ? number_format($rRatio,1).'%' : '—' }}</td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             @endif
 
             @if (! empty($byCache))
                 <div class="col-lg-6">
-                    <div class="block block-rounded">
-                        <div class="block-header block-header-default">
-                            <h3 class="block-title"><i class="fa fa-hard-drive me-2 opacity-50"></i>キャッシュ状態</h3>
-                        </div>
-                        <div class="block-content p-0">
-                            <table class="table table-sm table-hover table-vcenter mb-0">
-                                <thead><tr><th>cache_status</th><th class="text-end">req</th></tr></thead>
-                                <tbody>
-                                    @foreach ($byCache as $row)
-                                        <tr>
-                                            <td><code>{{ $row['cache_status'] ?: '—' }}</code></td>
-                                            <td class="text-end">{{ number_format((int) $row['reqs']) }}</td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        </div>
+                    <div class="bgc-white bd bdrs-3 p-20 mB-20">
+                        <h4 class="c-grey-900 mB-20"><i class="ti-server mR-10 c-grey-500"></i>キャッシュ状態</h4>
+                        <table class="table table-sm">
+                            <thead><tr><th>cache_status</th><th class="text-end">req</th></tr></thead>
+                            <tbody>
+                                @foreach ($byCache as $row)
+                                    <tr>
+                                        <td><code>{{ $row['cache_status'] ?: '—' }}</code></td>
+                                        <td class="text-end">{{ number_format((int) $row['reqs']) }}</td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             @endif
         </div>
     @else
-        <div class="alert alert-warning">
-            <i class="fa fa-triangle-exclamation me-1"></i> 顧客情報が紐付いていません。マスターアカウント (admin) にお問い合わせください。
+        <div class="alert alert-warning mT-20">
+            <i class="fa fa-triangle-exclamation mR-5"></i> 顧客情報が紐付いていません。マスターアカウント (admin) にお問い合わせください。
         </div>
     @endif
 @endsection

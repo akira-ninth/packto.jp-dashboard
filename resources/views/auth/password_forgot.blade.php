@@ -2,28 +2,26 @@
 
 @section('title', 'パスワードリセット | Packto Console')
 
-@section('auth-heading')
-    <h1>パスワードリセット</h1>
-    <h2>登録メールアドレスにリセットリンクを送信します</h2>
-@endsection
-
 @section('content')
+    <h4 class="fw-300 c-grey-900 mB-40">パスワードリセット</h4>
+    <p class="c-grey-600 fsz-sm mB-30">登録メールアドレスにリセットリンクを送信します</p>
+
     @if (session('status'))
-        <div class="alert alert-success fs-sm mb-3">{{ session('status') }}</div>
+        <div class="alert alert-success fsz-sm mB-20">{{ session('status') }}</div>
     @endif
 
     <form method="POST" action="{{ url('/password/forgot') }}">
         @csrf
-        <div class="form-floating mb-3">
-            <input type="email" name="email" value="{{ old('email') }}" class="form-control @error('email') is-invalid @enderror" id="resetEmail" placeholder="メールアドレス" required autofocus>
-            <label for="resetEmail">メールアドレス</label>
+        <div class="mB-20">
+            <label class="form-label" for="resetEmail">メールアドレス</label>
+            <input type="email" name="email" value="{{ old('email') }}" class="form-control @error('email') is-invalid @enderror" id="resetEmail" required autofocus>
             @error('email')<div class="invalid-feedback">{{ $message }}</div>@enderror
         </div>
-        <button type="submit" class="btn btn-lg btn-alt-primary w-100 py-2 fw-semibold">
-            <i class="fa fa-paper-plane me-1"></i> リセットリンクを送信
+        <button type="submit" class="btn btn-primary w-100 fw-600 pY-10">
+            リセットリンクを送信
         </button>
-        <p class="text-center mt-3 mb-0">
-            <a href="{{ route('login') }}" class="fs-sm text-muted">ログインに戻る</a>
+        <p class="ta-c mT-20 mB-0">
+            <a href="{{ route('login') }}" class="fsz-sm c-grey-600">ログインに戻る</a>
         </p>
     </form>
 @endsection

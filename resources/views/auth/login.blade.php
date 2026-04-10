@@ -2,37 +2,34 @@
 
 @section('title', 'ログイン | Packto Console')
 
-@section('auth-heading')
-    <h1>ようこそ</h1>
-    <h2>ログインしてください</h2>
-@endsection
-
 @section('content')
+    <h4 class="fw-300 c-grey-900 mB-40">ログイン</h4>
+
     @if (session('status'))
-        <div class="alert alert-success fs-sm mb-3">{{ session('status') }}</div>
+        <div class="alert alert-success fsz-sm mB-20">{{ session('status') }}</div>
     @endif
 
     <form method="POST" action="{{ url('/login') }}">
         @csrf
-        <div class="form-floating mb-3">
-            <input type="email" name="email" value="{{ old('email') }}" class="form-control @error('email') is-invalid @enderror" id="loginEmail" placeholder="メールアドレス" required autofocus>
-            <label for="loginEmail">メールアドレス</label>
+        <div class="mB-20">
+            <label class="form-label" for="loginEmail">メールアドレス</label>
+            <input type="email" name="email" value="{{ old('email') }}" class="form-control @error('email') is-invalid @enderror" id="loginEmail" required autofocus>
             @error('email')<div class="invalid-feedback">{{ $message }}</div>@enderror
         </div>
-        <div class="form-floating mb-3">
-            <input type="password" name="password" class="form-control @error('password') is-invalid @enderror" id="loginPassword" placeholder="パスワード" required>
-            <label for="loginPassword">パスワード</label>
+        <div class="mB-20">
+            <label class="form-label" for="loginPassword">パスワード</label>
+            <input type="password" name="password" class="form-control @error('password') is-invalid @enderror" id="loginPassword" required>
             @error('password')<div class="invalid-feedback">{{ $message }}</div>@enderror
         </div>
-        <div class="form-check mb-4">
+        <div class="form-check mB-30">
             <input type="checkbox" name="remember" value="1" class="form-check-input" id="remember">
-            <label for="remember" class="form-check-label fs-sm">ログイン状態を保持する</label>
+            <label for="remember" class="form-check-label fsz-sm">ログイン状態を保持する</label>
         </div>
-        <button type="submit" class="btn btn-lg btn-alt-primary w-100 py-2 fw-semibold">
-            <i class="fa fa-right-to-bracket me-1"></i> ログイン
+        <button type="submit" class="btn btn-primary w-100 fw-600 pY-10">
+            ログイン
         </button>
-        <p class="text-center mt-3 mb-0">
-            <a href="{{ route('password.forgot') }}" class="fs-sm text-muted">パスワードを忘れた方はこちら</a>
+        <p class="ta-c mT-20 mB-0">
+            <a href="{{ route('password.forgot') }}" class="fsz-sm c-grey-600">パスワードを忘れた方はこちら</a>
         </p>
     </form>
 @endsection
