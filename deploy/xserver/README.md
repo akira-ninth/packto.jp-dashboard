@@ -45,7 +45,7 @@
 ### 1. ローカルで本番ビルドを準備
 
 ```sh
-cd /Users/akira/dev/packto-console
+cd /Users/akira/dev/packto.jp/packto-console
 
 # 開発用パッケージを除いて vendor/ を生成
 composer install --no-dev --optimize-autoloader
@@ -93,18 +93,18 @@ rsync -avz --delete \
   --exclude='deploy/' \
   --exclude='tests/' \
   --exclude='storage/logs/*' \
-  /Users/akira/dev/packto-console/ \
+  /Users/akira/dev/packto.jp/packto-console/ \
   USER@SERVER:/home/USER/packto-console/
 
 # .env.tmp-prod を .env としてアップ
-scp /Users/akira/dev/packto-console/.env.tmp-prod \
+scp /Users/akira/dev/packto.jp/packto-console/.env.tmp-prod \
   USER@SERVER:/home/USER/packto-console/.env
 
 # 各 doc root に bootstrap ファイルを配置
-rsync -av /Users/akira/dev/packto-console/deploy/xserver/admin.packto.jp/ \
+rsync -av /Users/akira/dev/packto.jp/packto-console/deploy/xserver/admin.packto.jp/ \
   USER@SERVER:/home/USER/admin.packto.jp/
 
-rsync -av /Users/akira/dev/packto-console/deploy/xserver/app.packto.jp/ \
+rsync -av /Users/akira/dev/packto.jp/packto-console/deploy/xserver/app.packto.jp/ \
   USER@SERVER:/home/USER/app.packto.jp/
 ```
 
@@ -158,7 +158,7 @@ curl -sI https://admin.packto.jp/ | grep -i 'x-imagy'
 
 ```sh
 # ローカルで
-cd /Users/akira/dev/packto-console
+cd /Users/akira/dev/packto.jp/packto-console
 composer install --no-dev --optimize-autoloader
 php artisan config:cache && php artisan route:cache && php artisan view:cache
 
@@ -167,7 +167,7 @@ rsync -avz --delete \
   --exclude='.git/' --exclude='node_modules/' --exclude='.env' \
   --exclude='database/database.sqlite' --exclude='deploy/' \
   --exclude='tests/' --exclude='storage/logs/*' \
-  /Users/akira/dev/packto-console/ \
+  /Users/akira/dev/packto.jp/packto-console/ \
   USER@SERVER:/home/USER/packto-console/
 
 # Xserver 上で
