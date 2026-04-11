@@ -32,4 +32,7 @@
             <a href="{{ route('password.forgot') }}" class="fsz-sm c-grey-600">パスワードを忘れた方はこちら</a>
         </p>
     </form>
+    <p class="ta-c mT-30 mB-0 d-n@sm+">
+        <a href="https://packto.jp/" class="fsz-sm c-grey-600">← サービスサイトに戻る</a>
+    </p>
 @endsection

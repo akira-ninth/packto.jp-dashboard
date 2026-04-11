@@ -50,7 +50,13 @@
                 <img class="pos-a centerXY" src="/adminator/logo.svg" alt="" style="max-width: 60px; {{ $isAdmin ? 'filter: invert(1);' : '' }}">
             </div>
             <h2 style="color: {{ $isAdmin ? '#e2e8f0' : '#fff' }}; font-size: 1.75rem; font-weight: 700; margin: 0 0 .5rem; letter-spacing: .02em;">Packto</h2>
-            <p style="color: {{ $isAdmin ? '#64748b' : 'rgba(255,255,255,.7)' }}; font-size: .875rem; margin: 0;">超高速Web配信サービス</p>
+            <p style="color: {{ $isAdmin ? '#64748b' : 'rgba(255,255,255,.7)' }}; font-size: .875rem; margin: 0 0 1.5rem;">超高速Web配信サービス</p>
+            @if(!$isAdmin)
+                <a href="https://packto.jp/" style="display: inline-flex; align-items: center; gap: 6px; padding: 8px 18px; color: rgba(255,255,255,.85); font-size: .8rem; font-weight: 600; text-decoration: none; border: 1px solid rgba(255,255,255,.25); border-radius: 60px; transition: background .2s, border-color .2s;" onmouseover="this.style.background='rgba(255,255,255,.1)';this.style.borderColor='rgba(255,255,255,.5)'" onmouseout="this.style.background='transparent';this.style.borderColor='rgba(255,255,255,.25)'">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+                    サービスサイトに戻る
+                </a>
+            @endif
         </div>
     </div>
 
